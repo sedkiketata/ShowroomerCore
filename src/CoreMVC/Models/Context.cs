@@ -32,6 +32,27 @@ namespace CoreMVC.Models
             base.OnModelCreating(builder);
 
             builder.HasPostgresExtension("uuid-ossp");
+
+            // UserConfiguration
+            builder.Entity<User>(user =>
+                {
+                    user.HasKey(id => id.UserId);
+                }
+            );
+
+            // InteractionConfiguration
+            builder.Entity<Interaction>(interaction =>
+                {
+                    interaction.HasKey(i => new { i.InteractionId, i.UserId, i.ProductId });
+                    interaction.HasOne<User>(i => i.User).WithMany(user => user.Interactions)
+                                .HasForeignKey(user => user.UserId)
+                                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                    interaction.HasOne<Product>(i => i.Product).WithMany(product => product.Interactions)
+                                .HasForeignKey(product => product.ProductId)
+                                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                }
+            );
+
         }
        
     }

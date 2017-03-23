@@ -24,6 +24,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Threading.Tasks;
+using CoreMVC.Infrastructure;
 
 namespace CoreMVC
 {
@@ -104,6 +105,12 @@ namespace CoreMVC
 
             // Add framework services.
             services.AddMvc();
+
+            // Register Application services
+            services.AddSingleton<IProductRepository, ProductRepository>();
+
+            //services.AddScoped<IDatabaseFactory, DatabaseFactory>();
+            //services.AddScoped<IServiceProduct, ServiceProduct>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
