@@ -33,25 +33,42 @@ namespace CoreMVC.Models
 
             builder.HasPostgresExtension("uuid-ossp");
 
+            #region User Configuration
+
             // UserConfiguration
             builder.Entity<User>(user =>
                 {
                     user.HasKey(id => id.UserId);
                 }
             );
+            #endregion
+
+            #region Interaction Configuration
 
             // InteractionConfiguration
             builder.Entity<Interaction>(interaction =>
-                {
-                    interaction.HasKey(i => new { i.InteractionId, i.UserId, i.ProductId });
-                    interaction.HasOne<User>(i => i.User).WithMany(user => user.Interactions)
-                                .HasForeignKey(user => user.UserId)
-                                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
-                    interaction.HasOne<Product>(i => i.Product).WithMany(product => product.Interactions)
-                                .HasForeignKey(product => product.ProductId)
-                                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
-                }
-            );
+                    {
+                        interaction.HasKey(i => new { i.InteractionId, i.UserId, i.ProductId });
+                        interaction.HasOne<User>(i => i.User).WithMany(user => user.Interactions)
+                                    .HasForeignKey(user => user.UserId)
+                                    .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                        interaction.HasOne<Product>(i => i.Product).WithMany(product => product.Interactions)
+                                    .HasForeignKey(product => product.ProductId)
+                                    .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                        interaction.ToTable("Interaction");
+                    }
+                );
+            #endregion
+
+            #region Comment Configuration
+            builder.Entity<Comment>()
+                .ToTable("Comment");
+            #endregion
+
+            #region Rate Configuration
+            builder.Entity<Rate>()
+                .ToTable("Rate");
+            #endregion
 
         }
        
