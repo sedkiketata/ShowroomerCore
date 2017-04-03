@@ -14,12 +14,13 @@ namespace CoreMVC.Controllers
     public class VoucherController : Controller
     {
         private readonly IVoucherRepository _repository;
+        private readonly IUserRepository _userRepository;
 
         #region Construtor
-        public VoucherController(IVoucherRepository repository)
+        public VoucherController(IVoucherRepository repository, IUserRepository userRepository)
         {
             _repository = repository;
-
+            _userRepository = userRepository;
         }
         #endregion
 
@@ -38,10 +39,16 @@ namespace CoreMVC.Controllers
         public IActionResult Get(int id)
         {
             var item = _repository.Find(id);
-            if (item == null)
+            if (item == null || item.UserId == null)
             {
                 return NotFound();
             }
+            User SelectedUser = new Models.User();
+            SelectedUser.Username = _userRepository.Find(item.UserId).Username;
+            SelectedUser.City = _userRepository.Find(item.UserId).City;
+            SelectedUser.Street = _userRepository.Find(item.UserId).Street;
+            SelectedUser.ZipCode = _userRepository.Find(item.UserId).ZipCode;
+            item.User = SelectedUser;
             return new ObjectResult(item);
         }
         #endregion
