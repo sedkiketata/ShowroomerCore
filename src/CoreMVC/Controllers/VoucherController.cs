@@ -25,16 +25,19 @@ namespace CoreMVC.Controllers
         #endregion
 
         #region GetAll Method
+
         // GET: api/values
         [HttpGet]
         public IEnumerable<Voucher> GetAll()
         {
             return _repository.GetAll();
         }
+
         #endregion
 
-        // GET: api/values/5
         #region GET Method
+
+        // GET: api/values/5
         [HttpGet("{id}", Name = "GetVoucher")]
         public IActionResult Get(int id)
         {
@@ -51,11 +54,11 @@ namespace CoreMVC.Controllers
             item.User = SelectedUser;
             return new ObjectResult(item);
         }
+
         #endregion
 
-
-
         #region Create Method
+
         // POST api/values
         [HttpPost]
         public IActionResult Create([FromBody] Voucher voucher)
