@@ -109,8 +109,7 @@ namespace CoreMVC
             // Register Application services
             services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSingleton<IVoucherRepository, VoucherRepository>();
-
-
+            services.AddSingleton<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
