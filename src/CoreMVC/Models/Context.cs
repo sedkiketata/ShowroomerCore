@@ -21,7 +21,20 @@ namespace CoreMVC.Models
 {
     public class Context : DbContext
     {
+        #region DbSets
         public DbSet<Product> Products { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Interaction> Interactions { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Rate> Rates { get; set; }
+        public DbSet<Showroomer> Showroomers { get; set; }
+        public DbSet<Buyer> Buyers { get; set; }
+        public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<Showroom> Showrooms { get; set; }
+        public DbSet<Image> Images { get; set; }
+        #endregion
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
@@ -39,6 +52,7 @@ namespace CoreMVC.Models
             builder.Entity<User>(user =>
                 {
                     user.HasKey(id => id.UserId);
+                    user.ToTable("User");
                 }
             );
             #endregion
@@ -68,6 +82,73 @@ namespace CoreMVC.Models
             #region Rate Configuration
             builder.Entity<Rate>()
                 .ToTable("Rate");
+            #endregion
+
+            #region Purchase Configuration
+            builder.Entity<Purchase>( purchase =>
+                    {
+                        purchase.HasKey(p => p.PurchaseId);
+                    }
+                );
+            #endregion
+                
+            #region Order Configuration
+            builder.Entity<Order>(Order => 
+                    {
+                        Order.HasKey(o => o.OrderId);
+                        Order.HasOne<Product>(o => o.Product).WithMany(p => p.Orders).HasForeignKey(o => o.ProductId)
+                             .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                        Order.HasOne<Purchase>(o => o.Purchase).WithMany(p => p.Orders).HasForeignKey(o => o.PurchaseId)
+                             .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                        Order.HasOne<User>(o => o.User).WithMany(u => u.Orders).HasForeignKey(o => o.UserId)
+                             .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                    }
+                );
+            #endregion
+
+            #region Buyer Configuration
+            builder.Entity<Buyer>()
+                .ToTable("Buyer");
+            #endregion
+
+            #region Showroomer Configuration
+            builder.Entity<Showroomer>()
+                .ToTable("Showroomer");
+            #endregion
+
+            #region Voucher Configuration
+            builder.Entity<Voucher>(Voucher =>
+                    {
+                        Voucher.HasKey(v => v.VoucherId);
+                        Voucher.HasOne(voucher => voucher.User).WithMany(sh => sh.Vouchers)
+                                .HasForeignKey(v => v.UserId)
+                                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                    }
+                );
+            #endregion
+
+            #region Showroom Configuration
+            builder.Entity<Showroom>(Showroom =>
+                    {
+                        Showroom.HasKey(showroom => new { showroom.ShowroomerId, showroom.ProductId });
+                        Showroom.HasOne(showroom => showroom.Product).WithMany(p => p.Showrooms)
+                                 .HasForeignKey(sh => sh.ProductId)
+                                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                        Showroom.HasOne(showroom => showroom.Showroomer).WithMany(sh => sh.Showrooms)
+                                 .HasForeignKey(sh => sh.ShowroomerId)
+                                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                    }
+                );
+            #endregion
+
+            #region Image Configuration
+            builder.Entity<Image>(Image =>
+                {
+                    Image.HasKey(image => image.ImageId);
+                    Image.HasOne(image => image.Product).WithMany(p => p.Images)
+                          .HasForeignKey(image => image.ProductId);
+                }
+            );
             #endregion
 
         }

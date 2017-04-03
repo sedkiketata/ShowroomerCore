@@ -21,5 +21,9 @@ namespace CoreMVC.Models
         public int Quantity { get; set; }
         public float Discount { get; set; }
         public virtual ICollection<Interaction> Interactions { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Showroom> Showrooms { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
     }
+
 }

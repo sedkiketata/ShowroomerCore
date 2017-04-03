@@ -11,8 +11,12 @@ namespace CoreMVC.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long UserId { get; set; }
         public string Username { get; set; }
-        public string Adresse { get; set; }
+        public String City { get; set; }
+        public String Street { get; set; }
+        public int ZipCode { get; set; }
         public virtual ICollection<Interaction> Interactions { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Voucher> Vouchers { get; set; }
 
     }
 }

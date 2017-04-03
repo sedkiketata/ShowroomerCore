@@ -8,31 +8,14 @@ using CoreMVC.Models;
 namespace CoreMVC.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20170403194950_Adding-Buyer-Showroomer-and-Voucher-Models")]
+    partial class AddingBuyerShowroomerandVoucherModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:.uuid-ossp", "'uuid-ossp', '', ''")
                 .HasAnnotation("ProductVersion", "1.0.2");
-
-            modelBuilder.Entity("CoreMVC.Models.Image", b =>
-                {
-                    b.Property<long>("ImageId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProductId");
-
-                    b.Property<string>("Url");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Images");
-                });
 
             modelBuilder.Entity("CoreMVC.Models.Interaction", b =>
                 {
@@ -119,21 +102,6 @@ namespace CoreMVC.Migrations
                     b.HasKey("PurchaseId");
 
                     b.ToTable("Purchases");
-                });
-
-            modelBuilder.Entity("CoreMVC.Models.Showroom", b =>
-                {
-                    b.Property<long>("ShowroomerId");
-
-                    b.Property<long>("ProductId");
-
-                    b.HasKey("ShowroomerId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ShowroomerId");
-
-                    b.ToTable("Showrooms");
                 });
 
             modelBuilder.Entity("CoreMVC.Models.User", b =>
@@ -231,14 +199,6 @@ namespace CoreMVC.Migrations
                     b.HasDiscriminator().HasValue("Showroomer");
                 });
 
-            modelBuilder.Entity("CoreMVC.Models.Image", b =>
-                {
-                    b.HasOne("CoreMVC.Models.Product", "Product")
-                        .WithMany("Images")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("CoreMVC.Models.Interaction", b =>
                 {
                     b.HasOne("CoreMVC.Models.Product", "Product")
@@ -267,19 +227,6 @@ namespace CoreMVC.Migrations
                     b.HasOne("CoreMVC.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CoreMVC.Models.Showroom", b =>
-                {
-                    b.HasOne("CoreMVC.Models.Product", "Product")
-                        .WithMany("Showrooms")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("CoreMVC.Models.Showroomer", "Showroomer")
-                        .WithMany("Showrooms")
-                        .HasForeignKey("ShowroomerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

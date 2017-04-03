@@ -108,9 +108,7 @@ namespace CoreMVC
 
             // Register Application services
             services.AddSingleton<IProductRepository, ProductRepository>();
-
-            //services.AddScoped<IDatabaseFactory, DatabaseFactory>();
-            //services.AddScoped<IServiceProduct, ServiceProduct>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
