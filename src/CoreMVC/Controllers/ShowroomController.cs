@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using CoreMVC.Infrastructure;
 using CoreMVC.Models;
+using CoreMVC.Infrastructure;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoreMVC.Controllers
 {
     [Route("api/[controller]")]
-    public class ShowroomerController : Controller
+    public class ShowroomController : Controller
     {
-        private readonly IShowroomerRepository _repository;
+
+        private readonly IShowroomRepository _repository;
 
         #region Contructor
-        public ShowroomerController(IShowroomerRepository repository)
+        public ShowroomController(IShowroomRepository repository)
         {
             _repository = repository;
         }
@@ -25,15 +26,15 @@ namespace CoreMVC.Controllers
         #region GetAll Method
         // GET: api/values
         [HttpGet]
-        public IEnumerable<Showroomer> GetAll()
+        public IEnumerable<Showroom> GetAll()
         {
-            return (IEnumerable<Showroomer>)_repository.GetAll();
+            return _repository.GetAll();
         }
         #endregion
 
         #region Get Method
         // GET api/values/5
-        [HttpGet("{id}", Name = "GetShowroomer")]
+        [HttpGet("{id}", Name = "GetShowroom")]
         public IActionResult Get(int id)
         {
             var item = _repository.Find(id);
@@ -48,14 +49,14 @@ namespace CoreMVC.Controllers
         #region Create Method
         // POST api/values
         [HttpPost]
-        public IActionResult Create([FromBody] Showroomer value)
+        public IActionResult Create([FromBody] Showroom value)
         {
             if (value == null)
             {
                 return BadRequest();
             }
             _repository.Add(value);
-            return CreatedAtRoute("GetShowroomer", new { id = value.UserId }, value);
+            return CreatedAtRoute("GetShowroom", new { id = value.ShowroomId }, value);
         }
         #endregion
 
@@ -63,28 +64,24 @@ namespace CoreMVC.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public IActionResult Update(long id, [FromBody] Showroomer item)
+        public IActionResult Update(long id, [FromBody] Showroom item)
         {
-            if (item == null || item.UserId != id)
+            if (item == null || item.ShowroomId != id)
             {
                 return BadRequest();
             }
 
-            var Showroomer = _repository.Find(id);
-            if (Showroomer == null)
+            var Showroom = _repository.Find(id);
+            if (Showroom == null)
             {
                 return NotFound();
             }
 
-            Showroomer.Username = item.Username;
-            Showroomer.Street = item.Street;
-            Showroomer.ZipCode = item.ZipCode;
-            Showroomer.City = item.City;
-            Showroomer.Description = item.Description;
-            Showroomer.Latitude = item.Latitude;
-            Showroomer.Longitude = item.Longitude;
+            Showroom.ProductId = item.ProductId;
+            Showroom.ShowroomerId = item.ShowroomerId;
+            Showroom.ShowroomId = item.ShowroomId;
 
-            _repository.Update(Showroomer);
+            _repository.Update(Showroom);
             return new NoContentResult();
         }
 

@@ -80,9 +80,6 @@ namespace CoreMVC.Controllers
             Buyer.Street = item.Street;
             Buyer.ZipCode = item.ZipCode;
             Buyer.City = item.City;
-            Buyer.Interactions = item.Interactions;
-            Buyer.Orders = item.Orders;
-            Buyer.Vouchers = item.Vouchers;
             Buyer.DeliveryAddress = item.DeliveryAddress;
 
             _repository.Update(Buyer);

@@ -14,11 +14,18 @@ namespace CoreMVC.Controllers
     public class ProductController : Controller
     {
             private readonly IProductRepository _repository;
+            private readonly IInteractionRepository _interactionRepository;
+            private readonly IShowroomRepository _showroomRepository;
+            private readonly IImageRepository _imageRepository;
 
             #region Contructor
-            public ProductController(IProductRepository repository)
+            public ProductController(IProductRepository repository, IInteractionRepository interactionRepository,
+                IShowroomRepository showroomRepository, IImageRepository imageRepository)
             {
                 _repository = repository;
+                _interactionRepository = interactionRepository;
+                _showroomRepository = showroomRepository;
+                _imageRepository = imageRepository;
             } 
             #endregion
 
@@ -41,7 +48,58 @@ namespace CoreMVC.Controllers
                 {
                     return NotFound();
                 }
-                return new ObjectResult(item);
+
+            #region  Interactions List
+            // Rate list for the user that he commented for this product
+            List<Interaction> InteractionList = new List<Interaction>();
+            var InteractionQuery = from interaction in _interactionRepository.GetAll()
+                                   where interaction.ProductId == item.ProductId
+                                   select interaction;
+            foreach (var interaction in InteractionQuery)
+            {
+                Interaction UserRate = new Interaction();
+                UserRate.InteractionId = interaction.InteractionId;
+                UserRate.ProductId = interaction.ProductId;
+                UserRate.UserId = interaction.UserId;
+                InteractionList.Add(UserRate);
+            }
+            item.Interactions = InteractionList;
+            #endregion
+
+            #region Showrooms List
+            List<Showroom> ShowroomsList = new List<Showroom>();
+            var ShowroomQuery = from showroom in _showroomRepository.GetAll()
+                                   where showroom.ProductId == item.ProductId
+                                   select showroom;
+            foreach (var showroom in ShowroomQuery)
+            {
+                Showroom showrooms = new Showroom();
+                showrooms.ShowroomerId = showroom.ShowroomerId;
+                showrooms.ProductId = showroom.ProductId;
+                showrooms.ShowroomId = showroom.ShowroomId;
+                ShowroomsList.Add(showrooms);
+            }
+            item.Showrooms = ShowroomsList;
+            #endregion
+
+            #region Images List
+            List<Image> ImagesList = new List<Image>();
+            var ImageQuery = from image in _imageRepository.GetAll()
+                             where image.ProductId == item.ProductId
+                             select image;
+            foreach (var image in ImageQuery)
+            {
+                Image images = new Image();
+                images.ImageId = image.ImageId;
+                images.Name = image.Name;
+                images.ProductId = image.ProductId;
+                images.Url = image.Url;
+                ImagesList.Add(images);
+            }
+            item.Images = ImagesList;
+            #endregion
+
+            return new ObjectResult(item);
             } 
             #endregion
 

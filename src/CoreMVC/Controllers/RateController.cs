@@ -105,10 +105,8 @@ namespace CoreMVC.Controllers
             }
             
             Rate.InteractionId = item.InteractionId;
-            Rate.Product = item.Product;
             Rate.ProductId = item.ProductId;
             Rate.Mark = item.Mark;
-            Rate.User = item.User;
             Rate.UserId = item.UserId;
 
             _repository.Update(Rate);

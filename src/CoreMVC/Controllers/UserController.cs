@@ -14,11 +14,16 @@ namespace CoreMVC.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _repository;
+        private readonly IInteractionRepository _interactionRepository;
+        private readonly IVoucherRepository _voucherRepository;
 
         #region Contructor
-        public UserController(IUserRepository repository)
+        public UserController(IUserRepository repository, IInteractionRepository interactionRepository
+            , IVoucherRepository voucherRepository)
         {
             _repository = repository;
+            _interactionRepository = interactionRepository;
+            _voucherRepository = voucherRepository;
         }
         #endregion
 
@@ -41,6 +46,45 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
+
+            #region  Interactions List
+            // Rate list for the user that he commented for this product
+            List<Interaction> InteractionList = new List<Interaction>();
+            var InteractionQuery = from interaction in _interactionRepository.GetAll()
+                                   where interaction.UserId == item.UserId
+                                   select interaction;
+            foreach (var interaction in InteractionQuery)
+            {
+                Interaction UserRate = new Interaction();
+                UserRate.InteractionId = interaction.InteractionId;
+                UserRate.ProductId = interaction.ProductId;
+                UserRate.UserId = interaction.UserId;
+                InteractionList.Add(UserRate);
+            }
+            item.Interactions = InteractionList;
+            #endregion
+
+            #region Vouchers List
+            // Vouchers List
+            var Query = from voucher in _voucherRepository.GetAll()
+                        where voucher.UserId == item.UserId
+                        select voucher;
+            List<Voucher> VoucherList = new List<Voucher>();
+            foreach (var voucher in Query)
+            {
+                Voucher v = new Voucher();
+                v.Amount = voucher.Amount;
+                v.Description = voucher.Description;
+                v.Name = voucher.Name;
+                v.Reference = voucher.Reference;
+                v.UserId = voucher.UserId;
+                v.VoucherId = voucher.VoucherId;
+                VoucherList.Add(v);
+            }
+            item.Vouchers = VoucherList;
+            // End Vouchers List 
+            #endregion
+
             return new ObjectResult(item);
         }
         #endregion
@@ -80,9 +124,6 @@ namespace CoreMVC.Controllers
             User.Street = item.Street;
             User.ZipCode = item.ZipCode;
             User.City = item.City;
-            User.Interactions = item.Interactions;
-            User.Orders = item.Orders;
-            User.Vouchers = item.Vouchers;
 
             _repository.Update(User);
             return new NoContentResult();
