@@ -110,6 +110,16 @@ namespace CoreMVC
             services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSingleton<IVoucherRepository, VoucherRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IOrderRepository, OrderRepository>();
+            services.AddSingleton<IShowroomerRepository, ShowroomerRepository>();
+            services.AddSingleton<IShowroomRepository, ShowroomRepository>();
+            services.AddSingleton<IBuyerRepository, BuyerRepository>();
+            services.AddSingleton<IInteractionRepository, InteractionRepository>();
+            services.AddSingleton<IImageRepository, ImageRepository>();
+            services.AddSingleton<IRateRepository, RateRepository>();
+            services.AddSingleton<ICommentRepository, CommentRepository>();
+            services.AddSingleton<IPurchaseRepository, PurchasesRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
