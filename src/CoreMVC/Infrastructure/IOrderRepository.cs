@@ -13,5 +13,6 @@ namespace CoreMVC.Infrastructure
         Order Find(long key);
         void Remove(long key);
         void Update(Order item);
+        void AddtoCart(long idUser, long idProduct, int Quantity);
     }
 }
