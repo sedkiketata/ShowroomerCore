@@ -69,7 +69,7 @@ namespace CoreMVC.Infrastructure
             { 
                 Purchase pp = new Purchase
                 {
-                    DatePurchase = new DateTime(),
+                    DatePurchase = DateTime.Now,
                     Total = (_productRespository.Find(idProduct).Price) * Quantity,
                     Status = "Cart"
                 };

@@ -45,23 +45,23 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
-            User SelectedUser = new Models.User();
-            SelectedUser.Username = _userRepository.Find(item.UserId).Username;
-            SelectedUser.City = _userRepository.Find(item.UserId).City;
-            SelectedUser.Street = _userRepository.Find(item.UserId).Street;
-            SelectedUser.ZipCode = _userRepository.Find(item.UserId).ZipCode;
-            item.User = SelectedUser;
-            var CommentProduct = _productRepository.Find(item.ProductId);
-            Product Product = new Product();
-            Product.ProductId = CommentProduct.ProductId;
-            Product.Name = CommentProduct.Name;
-            Product.Price = CommentProduct.Price;
-            Product.Quantity = CommentProduct.Quantity;
-            Product.TVA = CommentProduct.TVA;
-            Product.Brand = CommentProduct.Brand;
-            Product.Category = CommentProduct.Category;
-            Product.Discount = CommentProduct.Discount;
-            item.Product = Product;
+            //User SelectedUser = new Models.User();
+            //SelectedUser.Username = _userRepository.Find(item.UserId).Username;
+            //SelectedUser.City = _userRepository.Find(item.UserId).City;
+            //SelectedUser.Street = _userRepository.Find(item.UserId).Street;
+            //SelectedUser.ZipCode = _userRepository.Find(item.UserId).ZipCode;
+            //item.User = SelectedUser;
+            //var CommentProduct = _productRepository.Find(item.ProductId);
+            //Product Product = new Product();
+            //Product.ProductId = CommentProduct.ProductId;
+            //Product.Name = CommentProduct.Name;
+            //Product.Price = CommentProduct.Price;
+            //Product.Quantity = CommentProduct.Quantity;
+            //Product.TVA = CommentProduct.TVA;
+            //Product.Brand = CommentProduct.Brand;
+            //Product.Category = CommentProduct.Category;
+            //Product.Discount = CommentProduct.Discount;
+            //item.Product = Product;
             return new ObjectResult(item);
         }
 
