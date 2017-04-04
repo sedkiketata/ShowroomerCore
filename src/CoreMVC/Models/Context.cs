@@ -130,7 +130,7 @@ namespace CoreMVC.Models
             #region Showroom Configuration
             builder.Entity<Showroom>(Showroom =>
                     {
-                        Showroom.HasKey(showroom => new { showroom.ShowroomerId, showroom.ProductId });
+                        Showroom.HasKey(showroom => showroom.ShowroomId);
                         Showroom.HasOne(showroom => showroom.Product).WithMany(p => p.Showrooms)
                                  .HasForeignKey(sh => sh.ProductId)
                                  .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);

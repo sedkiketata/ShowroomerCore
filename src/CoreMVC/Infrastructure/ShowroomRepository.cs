@@ -25,25 +25,14 @@ namespace CoreMVC.Infrastructure
             _context.Showrooms.Add(item);
             _context.SaveChanges();
         }
-        /// <summary>
-        /// This Method will return a Showroom object by entering ShowroomerId and ProductId
-        /// </summary>
-        /// <param name="ShowroomerId">Put the right id of the Showroomer</param>
-        /// <param name="ProductId">Put the right id of the Product</param>
-        /// <returns></returns>
-        public Showroom Find(long ShowroomerId, long ProductId)
+        public Showroom Find(long ShowroomId)
         {
-            return _context.Showrooms.FirstOrDefault(t => t.ShowroomerId == ShowroomerId && t.ProductId == ProductId );
+            return _context.Showrooms.FirstOrDefault(t => t.ShowroomId == ShowroomId);
         }
 
-        /// <summary>
-        /// This Method will delete a Showroom object specified by a ShowroomerId and ProductId
-        /// </summary>
-        /// <param name="ShowroomerId">Put the right id of the Showroomer</param>
-        /// <param name="ProductId">Put the right id of the Product</param>
-        public void Remove(long ShowroomerId, long ProductId)
+        public void Remove(long ShowroomId)
         {
-            var entity = _context.Showrooms.First(t => t.ShowroomerId == ShowroomerId && t.ProductId == ProductId);
+            var entity = _context.Showrooms.First(t => t.ShowroomId == ShowroomId);
             _context.Showrooms.Remove(entity);
             _context.SaveChanges();
         }

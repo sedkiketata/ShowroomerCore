@@ -10,8 +10,8 @@ namespace CoreMVC.Infrastructure
     {
         void Add(Showroom item);
         IEnumerable<Showroom> GetAll();
-        Showroom Find(long ShowroomerId, long ProductId);
-        void Remove(long ShowroomerId, long ProductId);
+        Showroom Find(long ShowroomId);
+        void Remove(long ShowroomId);
         void Update(Showroom item);
     }
 }

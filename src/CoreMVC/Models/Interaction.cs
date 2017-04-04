@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,7 +13,9 @@ namespace CoreMVC.Models
         public long InteractionId { get; set; }
         public long UserId { get; set; }
         public long ProductId { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual User User { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual Product Product { get; set; }
     }
 }

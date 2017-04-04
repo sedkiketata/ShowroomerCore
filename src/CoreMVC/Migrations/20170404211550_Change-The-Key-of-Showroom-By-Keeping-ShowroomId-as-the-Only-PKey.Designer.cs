@@ -8,9 +8,10 @@ using CoreMVC.Models;
 namespace CoreMVC.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20170404211550_Change-The-Key-of-Showroom-By-Keeping-ShowroomId-as-the-Only-PKey")]
+    partial class ChangeTheKeyofShowroomByKeepingShowroomIdastheOnlyPKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:.uuid-ossp", "'uuid-ossp', '', ''")

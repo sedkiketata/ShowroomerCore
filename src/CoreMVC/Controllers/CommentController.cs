@@ -16,13 +16,19 @@ namespace CoreMVC.Controllers
         private readonly ICommentRepository _repository;
         private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IVoucherRepository _voucherRepository;
+        private readonly IRateRepository _rateRepository;
 
         #region Contructor
-        public CommentController(ICommentRepository repository, IUserRepository userRepository, IProductRepository productRepository)
+        public CommentController(ICommentRepository repository, IUserRepository userRepository, 
+            IProductRepository productRepository,IVoucherRepository voucherRepository,
+            IRateRepository rateRepository)
         {
             _repository = repository;
             _productRepository = productRepository;
             _userRepository = userRepository;
+            _voucherRepository = voucherRepository;
+            _rateRepository = rateRepository;
         }
         #endregion
 
@@ -46,17 +52,61 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            // Create the user object inside the Comment
+            // -- Create the user object inside the Comment -- 
             var CommentUser = _userRepository.Find(item.UserId);
+
             User NewUser = new User();
             NewUser.UserId = CommentUser.UserId;
             NewUser.City = CommentUser.City;
             NewUser.Street = CommentUser.Street;
             NewUser.ZipCode = CommentUser.ZipCode;
             NewUser.Username = CommentUser.Username;
+
+            #region  Interactions List
+            // Rate list for the user that he commented for this product
+            List<Interaction> RateUserList = new List<Interaction>();
+            var InteractionQuery = from interaction in _rateRepository.GetAll()
+                                   where interaction.UserId == CommentUser.UserId
+                                   && interaction.ProductId == item.ProductId
+                                   select interaction;
+            foreach (var interaction in InteractionQuery)
+            {
+                Interaction UserRate = new Interaction();
+                UserRate.InteractionId = interaction.InteractionId;
+                UserRate.ProductId = interaction.ProductId;
+                UserRate.UserId = interaction.UserId;
+                RateUserList.Add(UserRate);
+            }
+            NewUser.Interactions = RateUserList;
+            #endregion
+
+            #region Vouchers List
+            // Vouchers List
+            var Query = from voucher in _voucherRepository.GetAll()
+                        where voucher.UserId == CommentUser.UserId
+                        select voucher;
+            List<Voucher> VoucherList = new List<Voucher>();
+            foreach (var voucher in Query)
+            {
+                Voucher v = new Voucher();
+                v.Amount = voucher.Amount;
+                v.Description = voucher.Description;
+                v.Name = voucher.Name;
+                v.Reference = voucher.Reference;
+                v.UserId = voucher.UserId;
+                v.VoucherId = voucher.VoucherId;
+                VoucherList.Add(v);
+            }
+            NewUser.Vouchers = VoucherList;
+            // End Vouchers List 
+            #endregion
+
             item.User = NewUser;
 
-            // Create the product object inside the Comment
+            // -- End of Create the user object inside the Comment -- 
+
+            #region Product List
+            // -- Create the product object inside the Comment -- 
             var CommentProduct = _productRepository.Find(item.ProductId);
             Product Product = new Product();
             Product.ProductId = CommentProduct.ProductId;
@@ -68,6 +118,9 @@ namespace CoreMVC.Controllers
             Product.Category = CommentProduct.Category;
             Product.Discount = CommentProduct.Discount;
             item.Product = Product;
+
+            // -- End of Create the product object inside the Comment --  
+            #endregion
 
             return new ObjectResult(item);
         }

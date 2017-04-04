@@ -20,9 +20,14 @@ namespace CoreMVC.Models
         public string Category { get; set; }
         public int Quantity { get; set; }
         public float Discount { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Interaction> Interactions { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Order> Orders { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Showroom> Showrooms { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Image> Images { get; set; }
     }
 
