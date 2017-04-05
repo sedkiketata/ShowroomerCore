@@ -8,7 +8,6 @@ namespace CoreMVC.Models
 {
     public class Purchase
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long PurchaseId { get; set; }
         public DateTime DatePurchase { get; set; }
         public Double Total { get; set; }

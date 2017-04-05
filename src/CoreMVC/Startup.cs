@@ -118,7 +118,7 @@ namespace CoreMVC
             services.AddSingleton<IImageRepository, ImageRepository>();
             services.AddSingleton<IRateRepository, RateRepository>();
             services.AddSingleton<ICommentRepository, CommentRepository>();
-            services.AddSingleton<IPurchaseRepository, PurchasesRepository>();
+            services.AddSingleton<IPurchaseRepository, PurchaseRepository>();
 
         }
 

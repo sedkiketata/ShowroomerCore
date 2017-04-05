@@ -6,11 +6,11 @@ using CoreMVC.Models;
 
 namespace CoreMVC.Infrastructure
 {
-    public class PurchasesRepository : IPurchaseRepository
+    public class PurchaseRepository : IPurchaseRepository
     {
         private readonly Context _context;
 
-        public PurchasesRepository(Context context)
+        public PurchaseRepository(Context context)
         {
             _context = context;
         }
