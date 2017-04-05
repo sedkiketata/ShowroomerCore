@@ -14,5 +14,7 @@ namespace CoreMVC.Infrastructure
         void Remove(long key);
         void Update(Order item);
         void AddtoCart(long idUser, long idProduct, int Quantity);
+        IEnumerable<Order> CartOrders(long idUser);
+        void ClearAll(long idUser);
     }
 }

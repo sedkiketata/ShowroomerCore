@@ -30,12 +30,7 @@ namespace CoreMVC.Controllers
             return (IEnumerable<Purchase>)_repository.GetAll();
         }
         #endregion
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+      
 
         #region Get Method
         // GET api/values/5

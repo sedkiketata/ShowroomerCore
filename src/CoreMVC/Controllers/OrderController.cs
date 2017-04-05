@@ -25,14 +25,16 @@ namespace CoreMVC.Controllers
             _productRepository = productRepository;
             _purchaseRepository = purchaseRepository;
             _userRepository = userRepositoy;
-        } 
+        }
         #endregion
+        #region GetAll Method
         // GET: api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Order> GetAll()
         {
-            return new string[] { "value1", "value2" };
+            return _repository.GetAll();
         }
+        #endregion
 
         #region GET Method
 
@@ -45,31 +47,47 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
-            //User SelectedUser = new Models.User();
-            //SelectedUser.Username = _userRepository.Find(item.UserId).Username;
-            //SelectedUser.City = _userRepository.Find(item.UserId).City;
-            //SelectedUser.Street = _userRepository.Find(item.UserId).Street;
-            //SelectedUser.ZipCode = _userRepository.Find(item.UserId).ZipCode;
-            //item.User = SelectedUser;
-            //var CommentProduct = _productRepository.Find(item.ProductId);
-            //Product Product = new Product();
-            //Product.ProductId = CommentProduct.ProductId;
-            //Product.Name = CommentProduct.Name;
-            //Product.Price = CommentProduct.Price;
-            //Product.Quantity = CommentProduct.Quantity;
-            //Product.TVA = CommentProduct.TVA;
-            //Product.Brand = CommentProduct.Brand;
-            //Product.Category = CommentProduct.Category;
-            //Product.Discount = CommentProduct.Discount;
-            //item.Product = Product;
+           
+           var SelectedUser = _userRepository.Find(item.UserId);
+            User User = new Models.User();
+
+            // item.User = SelectedUser;
+            User.UserId = SelectedUser.UserId;
+            User.Username = SelectedUser.Username;
+            User.City = SelectedUser.City;
+            User.Street = SelectedUser.Street;
+            User.ZipCode = SelectedUser.ZipCode;
+            item.User = User;
+            var SelectedProduct = _productRepository.Find(item.ProductId);
+            Product Product = new Product();
+            Product.ProductId = SelectedProduct.ProductId;
+            Product.Name = SelectedProduct.Name;
+            Product.Price = SelectedProduct.Price;
+            Product.Quantity = SelectedProduct.Quantity;
+            Product.TVA = SelectedProduct.TVA;
+            Product.Brand = SelectedProduct.Brand;
+            Product.Category = SelectedProduct.Category;
+            Product.Discount = SelectedProduct.Discount;
+            item.Product = Product;
+
+            var SelectedPurchase = _purchaseRepository.Find(item.PurchaseId);
+            Purchase purchase = new Purchase();
+            purchase.PurchaseId = SelectedPurchase.PurchaseId;
+            purchase.Status = SelectedPurchase.Status;
+            purchase.Total = SelectedPurchase.Total;
+            purchase.DatePurchase = SelectedPurchase.DatePurchase;
+            item.Purchase = purchase;
+
+
             return new ObjectResult(item);
         }
 
         #endregion
 
+        #region Create Method
         // POST api/values
         [HttpPost]
-        public IActionResult Post( [FromBody] Variables variables)
+        public IActionResult Post([FromBody] Variables variables)
         {
             long userId = variables.UserId;
             long productId = variables.ProductId;
@@ -80,11 +98,12 @@ namespace CoreMVC.Controllers
                 return BadRequest();
             }
             _repository.AddtoCart(userId, productId, qte);
-            long idNewOrder = _repository.GetAll().Select(x => x.OrderId).Max();
+            long idNewOrder = _repository.GetAll().Select(x => x.OrderId).Last();
             Order newOrder = _repository.Find(idNewOrder);
             return CreatedAtRoute("GetOrder", new { id = idNewOrder }, newOrder);
 
-        }
+        } 
+        #endregion
 
         // PUT api/values/5
         [HttpPut("{id}")]
@@ -92,10 +111,22 @@ namespace CoreMVC.Controllers
         {
         }
 
+        #region Delete item from cart 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(long id)
         {
-        }
+            _repository.Remove(_repository.Find(id).OrderId);
+        } 
+        #endregion
+
+        #region ClearAll Method
+        // DELETE api/values/5
+        [HttpDelete]
+        public void Delete([FromBody] Order order)
+        {
+            _repository.ClearAll(order.UserId);
+        } 
+        #endregion
     }
 }
