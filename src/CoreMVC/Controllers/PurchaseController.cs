@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CoreMVC.Infrastructure;
 using CoreMVC.Models;
+using Microsoft.Extensions.Primitives;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,24 +25,24 @@ namespace CoreMVC.Controllers
 
         #region GetAll Method
         // GET: api/values
+        [Route("[action]")]
         [HttpGet]
         public IEnumerable<Purchase> GetAll()
         {
             return (IEnumerable<Purchase>)_repository.GetAll();
         }
         #endregion
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
         #region Get Method
         // GET api/values/5
-        [HttpGet("{id}", Name = "GetPurchase")]
-        public IActionResult Get(int id)
+        [HttpGet(Name = "GetPurchase")]
+        public IActionResult Get()
         {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
             var item = _repository.Find(id);
             if (item == null)
             {

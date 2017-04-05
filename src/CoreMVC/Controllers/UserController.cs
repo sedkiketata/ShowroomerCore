@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CoreMVC.Infrastructure;
 using CoreMVC.Models;
+using Microsoft.Extensions.Primitives;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,6 +30,7 @@ namespace CoreMVC.Controllers
 
         #region GetAll Method
         // GET: api/values
+        [Route("[action]")]
         [HttpGet]
         public IEnumerable<User> GetAll()
         {
@@ -38,9 +40,14 @@ namespace CoreMVC.Controllers
 
         #region Get Method
         // GET api/values/5
-        [HttpGet("{id}", Name = "GetUser")]
-        public IActionResult Get(int id)
+        [HttpGet(Name = "GetUser")]
+        public IActionResult Get()
         {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
             var item = _repository.Find(id);
             if (item == null)
             {
@@ -106,9 +113,14 @@ namespace CoreMVC.Controllers
         #region Update Method
 
         // PUT api/values/5
-        [HttpPut("{id}")]
-        public IActionResult Update(long id, [FromBody] User item)
+        [HttpPut]
+        public IActionResult Update([FromBody] User item)
         {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
             if (item == null || item.UserId != id)
             {
                 return BadRequest();
@@ -133,9 +145,14 @@ namespace CoreMVC.Controllers
 
         #region Delete Method
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        [HttpDelete]
+        public IActionResult Delete()
         {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
             var item = _repository.Find(id);
             if (item == null)
             {
