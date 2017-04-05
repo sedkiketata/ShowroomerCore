@@ -160,10 +160,8 @@ namespace CoreMVC.Controllers
 
             Comment.Date = DateTime.Now;
             Comment.InteractionId = item.InteractionId;
-            Comment.Product = item.Product;
             Comment.ProductId = item.ProductId;
             Comment.Text = item.Text;
-            Comment.User = item.User;
             Comment.UserId = item.UserId;
 
             _repository.Update(Comment);
