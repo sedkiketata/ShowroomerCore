@@ -29,7 +29,18 @@ namespace CoreMVC.Controllers
         [HttpGet]
         public IEnumerable<Purchase> GetAll()
         {
-            return (IEnumerable<Purchase>)_repository.GetAll();
+            List<Purchase> ListPurchase = new List<Purchase>();
+            foreach (Purchase PurchaseOne in _repository.GetAll())
+            {
+                Purchase NewPurchase = new Purchase();
+                NewPurchase.DatePurchase = PurchaseOne.DatePurchase;
+                NewPurchase.PurchaseId = PurchaseOne.PurchaseId;
+                NewPurchase.Status = PurchaseOne.Status;
+                NewPurchase.Total = PurchaseOne.Total;
+                NewPurchase.Orders = null;
+                ListPurchase.Add(NewPurchase);
+            }
+            return ListPurchase;
         }
         #endregion
 
@@ -48,6 +59,7 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
+            item.Orders = null;
             return new ObjectResult(item);
         }
         #endregion
@@ -67,16 +79,5 @@ namespace CoreMVC.Controllers
         }
         #endregion
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

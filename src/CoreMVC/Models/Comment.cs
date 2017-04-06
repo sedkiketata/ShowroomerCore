@@ -7,6 +7,7 @@ namespace CoreMVC.Models
 {
     public class Comment : Interaction
     {
+        ~Comment() { }
         public DateTime Date { get; set; }
         public string Text { get; set; }
     }

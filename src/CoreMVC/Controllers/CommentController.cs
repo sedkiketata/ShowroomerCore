@@ -33,13 +33,26 @@ namespace CoreMVC.Controllers
         }
         #endregion
 
-        [Route("[action]")]
         #region GetAll Method
         // GET: api/values
+        [Route("[action]")]
         [HttpGet]
         public IEnumerable<Comment> GetAll()
         {
-            return _repository.GetAll();
+            List<Comment> ListComment = new List<Comment>();
+            foreach (Comment CommentOne in _repository.GetAll())
+            {
+                Comment NewComment = new Comment();
+                NewComment.Date = CommentOne.Date;
+                NewComment.InteractionId = CommentOne.InteractionId;
+                NewComment.ProductId = CommentOne.ProductId;
+                NewComment.Text = CommentOne.Text;
+                NewComment.UserId = CommentOne.UserId;
+                NewComment.User = null;
+                NewComment.Product = null;
+                ListComment.Add(NewComment);
+            }
+            return ListComment;
         }
         #endregion
 
@@ -69,48 +82,11 @@ namespace CoreMVC.Controllers
             NewUser.Street = CommentUser.Street;
             NewUser.ZipCode = CommentUser.ZipCode;
             NewUser.Username = CommentUser.Username;
-
-            #region  Interactions List
-            // Rate list for the user that he commented for this product
-            List<Interaction> RateUserList = new List<Interaction>();
-            var InteractionQuery = from interaction in _rateRepository.GetAll()
-                                   where interaction.UserId == CommentUser.UserId
-                                   && interaction.ProductId == item.ProductId
-                                   select interaction;
-            foreach (var interaction in InteractionQuery)
-            {
-                Interaction UserRate = new Interaction();
-                UserRate.InteractionId = interaction.InteractionId;
-                UserRate.ProductId = interaction.ProductId;
-                UserRate.UserId = interaction.UserId;
-                RateUserList.Add(UserRate);
-            }
-            NewUser.Interactions = RateUserList;
-            #endregion
-
-            #region Vouchers List
-            // Vouchers List
-            var Query = from voucher in _voucherRepository.GetAll()
-                        where voucher.UserId == CommentUser.UserId
-                        select voucher;
-            List<Voucher> VoucherList = new List<Voucher>();
-            foreach (var voucher in Query)
-            {
-                Voucher v = new Voucher();
-                v.Amount = voucher.Amount;
-                v.Description = voucher.Description;
-                v.Name = voucher.Name;
-                v.Reference = voucher.Reference;
-                v.UserId = voucher.UserId;
-                v.VoucherId = voucher.VoucherId;
-                VoucherList.Add(v);
-            }
-            NewUser.Vouchers = VoucherList;
-            // End Vouchers List 
-            #endregion
-
+            NewUser.Interactions = null;
+            NewUser.Orders = null;
+            NewUser.Vouchers = null;
             item.User = NewUser;
-
+            
             // -- End of Create the user object inside the Comment -- 
 
             #region Product List
@@ -125,10 +101,20 @@ namespace CoreMVC.Controllers
             Product.Brand = CommentProduct.Brand;
             Product.Category = CommentProduct.Category;
             Product.Discount = CommentProduct.Discount;
+            Product.Images = null;
+            Product.Interactions = null;
+            Product.Orders = null;
+            Product.Showrooms = null; 
             item.Product = Product;
 
             // -- End of Create the product object inside the Comment --  
             #endregion
+
+            // Unset variables that are unused
+            NewUser = null;
+            Product = null;
+            CommentProduct = null;
+            
 
             return new ObjectResult(item);
         }
@@ -176,6 +162,8 @@ namespace CoreMVC.Controllers
             Comment.ProductId = item.ProductId;
             Comment.Text = item.Text;
             Comment.UserId = item.UserId;
+            Comment.Product = null;
+            Comment.User = null;
 
             _repository.Update(Comment);
             return new NoContentResult();

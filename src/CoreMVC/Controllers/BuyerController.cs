@@ -15,11 +15,13 @@ namespace CoreMVC.Controllers
     public class BuyerController : Controller
     {
         private readonly IBuyerRepository _repository;
+        private readonly IInteractionRepository _interactionRepository;
 
         #region Contructor
-        public BuyerController(IBuyerRepository repository)
+        public BuyerController(IBuyerRepository repository, IInteractionRepository interactionRepository)
         {
             _repository = repository;
+            _interactionRepository = interactionRepository;
         }
         #endregion
 
@@ -29,7 +31,22 @@ namespace CoreMVC.Controllers
         [HttpGet]
         public IEnumerable<Buyer> GetAll()
         {
-            return (IEnumerable<Buyer>)_repository.GetAll();
+            List<Buyer> ListBuyer = new List<Buyer>();
+            foreach (Buyer OneBuyer in _repository.GetAll())
+            {
+                Buyer NewBuyer = new Buyer();
+                NewBuyer.City = OneBuyer.City;
+                NewBuyer.DeliveryAddress = OneBuyer.DeliveryAddress;
+                NewBuyer.Street = OneBuyer.Street;
+                NewBuyer.UserId = OneBuyer.UserId;
+                NewBuyer.Username = OneBuyer.Username;
+                NewBuyer.ZipCode = OneBuyer.ZipCode;
+                NewBuyer.Vouchers = null;
+                NewBuyer.Orders = null;
+                NewBuyer.Interactions = null;
+                ListBuyer.Add(NewBuyer);
+            }
+            return ListBuyer;
         }
         #endregion
 
@@ -48,6 +65,31 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
+
+
+            #region  Interactions List
+            // Rate list for the user that he commented for this product
+            List<Interaction> InteractionList = new List<Interaction>();
+            var InteractionQuery = from interaction in _interactionRepository.GetAll()
+                                   where interaction.UserId == item.UserId
+                                   select interaction;
+            foreach (var interaction in InteractionQuery)
+            {
+                Interaction UserRate = new Interaction();
+                UserRate.InteractionId = interaction.InteractionId;
+                UserRate.ProductId = interaction.ProductId;
+                UserRate.UserId = interaction.UserId;
+                UserRate.Product = null;
+                UserRate.User = null;
+                InteractionList.Add(UserRate);
+            }
+            item.Interactions = InteractionList;
+            #endregion
+
+            // Unset variables that are unused
+            InteractionList = null;
+            InteractionQuery = null;
+
             return new ObjectResult(item);
         }
         #endregion
@@ -93,6 +135,9 @@ namespace CoreMVC.Controllers
             Buyer.ZipCode = item.ZipCode;
             Buyer.City = item.City;
             Buyer.DeliveryAddress = item.DeliveryAddress;
+            Buyer.Interactions = null;
+            Buyer.Orders = null;
+            Buyer.Vouchers = null;
 
             _repository.Update(Buyer);
             return new NoContentResult();

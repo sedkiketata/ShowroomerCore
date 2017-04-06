@@ -16,11 +16,16 @@ namespace CoreMVC.Controllers
     {
 
         private readonly IShowroomRepository _repository;
+        private readonly IShowroomerRepository _showroomerRepository;
+        private readonly IProductRepository _productRepository;
 
         #region Contructor
-        public ShowroomController(IShowroomRepository repository)
+        public ShowroomController(IShowroomRepository repository, IShowroomerRepository showroomerRepository,
+            IProductRepository productRepository)
         {
             _repository = repository;
+            _showroomerRepository = showroomerRepository;
+            _productRepository = productRepository;
         }
         #endregion
 
@@ -30,7 +35,18 @@ namespace CoreMVC.Controllers
         [HttpGet]
         public IEnumerable<Showroom> GetAll()
         {
-            return _repository.GetAll();
+            List<Showroom> Showrooms = new List<Showroom>();
+            foreach (Showroom OneShowroom in _repository.GetAll())
+            {
+                Showroom NewShowroom = new Showroom();
+                NewShowroom.ProductId = OneShowroom.ProductId;
+                NewShowroom.ShowroomerId = OneShowroom.ShowroomerId;
+                NewShowroom.ShowroomId = OneShowroom.ShowroomId;
+                NewShowroom.Showroomer = null;
+                NewShowroom.Product = null;
+                Showrooms.Add(NewShowroom);
+            }
+            return Showrooms;
         }
         #endregion
 
@@ -49,6 +65,48 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
+
+            var SelectedUser = _showroomerRepository.Find(item.ShowroomerId);
+            Showroomer showroomer = new Showroomer();
+            showroomer.UserId = SelectedUser.UserId;
+            showroomer.Username = SelectedUser.Username;
+            showroomer.City = SelectedUser.City;
+            showroomer.Street = SelectedUser.Street;
+            showroomer.ZipCode = SelectedUser.ZipCode;
+            showroomer.Latitude = SelectedUser.Latitude;
+            showroomer.Longitude = SelectedUser.Longitude;
+            showroomer.Description = SelectedUser.Description;
+            showroomer.Showrooms = null;
+            showroomer.Orders = null;
+            showroomer.Vouchers = null;
+            showroomer.Interactions = null;
+
+            item.Showroomer = showroomer;
+
+            var SelectedProduct = _productRepository.Find(item.ProductId);
+            Product Product = new Product();
+            Product.ProductId = SelectedProduct.ProductId;
+            Product.Name = SelectedProduct.Name;
+            Product.Price = SelectedProduct.Price;
+            Product.Quantity = SelectedProduct.Quantity;
+            Product.TVA = SelectedProduct.TVA;
+            Product.Brand = SelectedProduct.Brand;
+            Product.Category = SelectedProduct.Category;
+            Product.Discount = SelectedProduct.Discount;
+            Product.Showrooms = null;
+            Product.Interactions = null;
+            Product.Orders = null;
+            Product.Images = null;
+            item.Product = Product;
+
+            
+
+            // Unset variables that are unused
+            SelectedUser = null;
+            showroomer = null;
+            SelectedProduct = null;
+            Product = null;
+
             return new ObjectResult(item);
         }
         #endregion
@@ -62,6 +120,8 @@ namespace CoreMVC.Controllers
             {
                 return BadRequest();
             }
+            value.Product = null;
+            value.Showroomer = null;
             _repository.Add(value);
             return CreatedAtRoute("GetShowroom", new { id = value.ShowroomId }, value);
         }
@@ -92,7 +152,8 @@ namespace CoreMVC.Controllers
             Showroom.ProductId = item.ProductId;
             Showroom.ShowroomerId = item.ShowroomerId;
             Showroom.ShowroomId = item.ShowroomId;
-
+            Showroom.Product = null;
+            Showroom.Showroomer = null;
             _repository.Update(Showroom);
             return new NoContentResult();
         }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using CoreMVC.Infrastructure;
 using CoreMVC.Models;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Primitives;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -31,19 +32,39 @@ namespace CoreMVC.Controllers
 
         #region GetAll Method
         // GET: api/values
+        [Route("[action]")]
         [HttpGet]
         public IEnumerable<Order> GetAll()
         {
-            return _repository.GetAll();
+            List<Order> ListOrder = new List<Order>();
+            foreach (Order OrderOne in _repository.GetAll())
+            {
+                Order NewOrder = new Order();
+                NewOrder.OrderId = OrderOne.OrderId;
+                NewOrder.ProductId = OrderOne.ProductId;
+                NewOrder.PurchaseId = OrderOne.PurchaseId;
+                NewOrder.Quantity = OrderOne.Quantity;
+                NewOrder.UserId = OrderOne.UserId;
+                NewOrder.User = null;
+                NewOrder.Purchase = null;
+                NewOrder.Product = null;
+                ListOrder.Add(NewOrder);
+            }
+            return ListOrder;
         }
         #endregion
 
         #region GET Method
 
         // GET: api/values/5
-        [HttpGet("{id}", Name = "GetOrder")]
-        public IActionResult Get(long id)
+        [HttpGet(Name = "GetOrder")]
+        public IActionResult Get()
         {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
             var item = _repository.Find(id);
             if (item == null || item.UserId == null)
             {
@@ -59,7 +80,11 @@ namespace CoreMVC.Controllers
             User.City = SelectedUser.City;
             User.Street = SelectedUser.Street;
             User.ZipCode = SelectedUser.ZipCode;
+            User.Interactions = null;
+            User.Orders = null;
+            User.Vouchers = null;
             item.User = User;
+
             var SelectedProduct = _productRepository.Find(item.ProductId);
             Product Product = new Product();
             Product.ProductId = SelectedProduct.ProductId;
@@ -70,6 +95,10 @@ namespace CoreMVC.Controllers
             Product.Brand = SelectedProduct.Brand;
             Product.Category = SelectedProduct.Category;
             Product.Discount = SelectedProduct.Discount;
+            Product.Images = null;
+            Product.Interactions = null;
+            Product.Orders = null;
+            Product.Showrooms = null;
             item.Product = Product;
 
             var SelectedPurchase = _purchaseRepository.Find(item.PurchaseId);
@@ -78,8 +107,16 @@ namespace CoreMVC.Controllers
             purchase.Status = SelectedPurchase.Status;
             purchase.Total = SelectedPurchase.Total;
             purchase.DatePurchase = SelectedPurchase.DatePurchase;
+            purchase.Orders = null;
             item.Purchase = purchase;
 
+            // Unset variables that are unused
+            SelectedUser = null;
+            User = null;
+            SelectedProduct = null;
+            Product = null;
+            SelectedPurchase = null;
+            purchase = null;
 
             return new ObjectResult(item);
         }
@@ -107,27 +144,27 @@ namespace CoreMVC.Controllers
         } 
         #endregion
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
         #region Delete item from cart 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(long id)
+        [HttpDelete]
+        public void Delete()
         {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
             _repository.Remove(_repository.Find(id).OrderId);
         } 
         #endregion
 
         #region ClearAll Method
         // DELETE api/values/5
+        [Route("ClearAll")]
         [HttpDelete]
-        public void Delete([FromBody] Order order)
+        public void Delete([FromBody] long id)
         {
-            _repository.ClearAll(order.UserId);
+            _repository.ClearAll(id);
         } 
         #endregion
     }

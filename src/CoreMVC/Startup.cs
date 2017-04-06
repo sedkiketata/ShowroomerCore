@@ -25,6 +25,7 @@ using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Threading.Tasks;
 using CoreMVC.Infrastructure;
+using Newtonsoft.Json.Serialization;
 
 namespace CoreMVC
 {
@@ -104,7 +105,11 @@ namespace CoreMVC
                 .AddDbContext<Context>(options => options.UseNpgsql(connection));
 
             // Add framework services.
-            services.AddMvc();
+            //services.AddMvc();
+            services.AddMvc().AddJsonOptions(options => {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
             // Register Application services
             services.AddSingleton<IProductRepository, ProductRepository>();

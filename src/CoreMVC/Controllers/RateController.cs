@@ -33,7 +33,19 @@ namespace CoreMVC.Controllers
         [HttpGet]
         public IEnumerable<Rate> GetAll()
         {
-            return _repository.GetAll();
+            List<Rate> ListRate = new List<Rate>();
+            foreach (Rate RateOne in _repository.GetAll())
+            {
+                Rate NewRate = new Rate();
+                NewRate.InteractionId = RateOne.InteractionId;
+                NewRate.Mark = RateOne.Mark;
+                NewRate.ProductId = RateOne.ProductId;
+                NewRate.UserId = RateOne.UserId;
+                NewRate.User = null;
+                NewRate.Product = null;
+                ListRate.Add(NewRate);
+            }
+            return ListRate;
         }
         #endregion
 
@@ -61,6 +73,9 @@ namespace CoreMVC.Controllers
             NewUser.Street = RateUser.Street;
             NewUser.ZipCode = RateUser.ZipCode;
             NewUser.Username = RateUser.Username;
+            NewUser.Vouchers = null;
+            NewUser.Orders = null;
+            NewUser.Interactions = null;
             item.User = NewUser;
 
             // Create the product object inside the Rate
@@ -74,7 +89,17 @@ namespace CoreMVC.Controllers
             Product.Brand = RateProduct.Brand;
             Product.Category = RateProduct.Category;
             Product.Discount = RateProduct.Discount;
+            Product.Images = null;
+            Product.Interactions = null;
+            Product.Orders = null;
+            Product.Showrooms = null;
             item.Product = Product;
+
+            // Unset variables that are unused
+            RateUser = null;
+            NewUser = null;
+            RateProduct = null;
+            Product = null ;
 
             return new ObjectResult(item);
         }
@@ -120,6 +145,8 @@ namespace CoreMVC.Controllers
             Rate.ProductId = item.ProductId;
             Rate.Mark = item.Mark;
             Rate.UserId = item.UserId;
+            Rate.User = null;
+            Rate.Product = null;
 
             _repository.Update(Rate);
             return new NoContentResult();

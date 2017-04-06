@@ -15,11 +15,18 @@ namespace CoreMVC.Controllers
     public class ShowroomerController : Controller
     {
         private readonly IShowroomerRepository _repository;
+        private readonly IInteractionRepository _interactionRepository;
+        private readonly IVoucherRepository _voucherRepository;
+        private readonly IShowroomRepository _showroomRepository;
 
         #region Contructor
-        public ShowroomerController(IShowroomerRepository repository)
+        public ShowroomerController(IShowroomerRepository repository, IVoucherRepository voucherRepository,
+            IInteractionRepository interactionRepository, IShowroomRepository showroomRepository)
         {
             _repository = repository;
+            _voucherRepository = voucherRepository;
+            _interactionRepository = interactionRepository;
+            _showroomRepository = showroomRepository;
         }
         #endregion
 
@@ -29,7 +36,24 @@ namespace CoreMVC.Controllers
         [HttpGet]
         public IEnumerable<Showroomer> GetAll()
         {
-            return (IEnumerable<Showroomer>)_repository.GetAll();
+            List<Showroomer> ListShowroomer = new List<Showroomer>();
+            foreach (Showroomer ShowroomerOne in _repository.GetAll())
+            {
+                Showroomer NewShowroomer = new Showroomer();
+                NewShowroomer.City = ShowroomerOne.City;
+                NewShowroomer.Description = ShowroomerOne.Description;
+                NewShowroomer.Latitude = ShowroomerOne.Latitude;
+                NewShowroomer.Longitude = ShowroomerOne.Longitude;
+                NewShowroomer.Street = ShowroomerOne.Street;
+                NewShowroomer.Username = ShowroomerOne.Username;
+                NewShowroomer.ZipCode = ShowroomerOne.ZipCode;
+                NewShowroomer.Vouchers = null;
+                NewShowroomer.Showrooms = null;
+                NewShowroomer.Orders = null;
+                NewShowroomer.Interactions = null;
+                ListShowroomer.Add(NewShowroomer);
+            }
+            return ListShowroomer;
         }
         #endregion
 
@@ -48,6 +72,74 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
+
+
+            #region  Interactions List
+            // Rate list for the user that he commented for this product
+            List<Interaction> InteractionList = new List<Interaction>();
+            var InteractionQuery = from interaction in _interactionRepository.GetAll()
+                                   where interaction.UserId == item.UserId
+                                   select interaction;
+            foreach (var interaction in InteractionQuery)
+            {
+                Interaction UserRate = new Interaction();
+                UserRate.InteractionId = interaction.InteractionId;
+                UserRate.ProductId = interaction.ProductId;
+                UserRate.UserId = interaction.UserId;
+                UserRate.User = null;
+                UserRate.Product = null;
+                InteractionList.Add(UserRate);
+            }
+            item.Interactions = InteractionList;
+            #endregion
+
+            #region Vouchers List
+            // Vouchers List
+            var Query = from voucher in _voucherRepository.GetAll()
+                        where voucher.UserId == item.UserId
+                        select voucher;
+            List<Voucher> VoucherList = new List<Voucher>();
+            foreach (var voucher in Query)
+            {
+                Voucher v = new Voucher();
+                v.Amount = voucher.Amount;
+                v.Description = voucher.Description;
+                v.Name = voucher.Name;
+                v.Reference = voucher.Reference;
+                v.UserId = voucher.UserId;
+                v.VoucherId = voucher.VoucherId;
+                VoucherList.Add(v);
+            }
+            item.Vouchers = VoucherList;
+            // End Vouchers List 
+            #endregion
+
+            #region  Showrooms List
+            // Rate list for the user that he commented for this product
+            List<Showroom> ShowroomList = new List<Showroom>();
+            var ShowroomQuery = from showroom in _showroomRepository.GetAll()
+                                   where showroom.ShowroomerId == item.UserId
+                                   select showroom;
+            foreach (var showroom in ShowroomQuery)
+            {
+                Showroom UserShowroom  = new Showroom();
+                UserShowroom.ShowroomerId = showroom.ShowroomerId;
+                UserShowroom.ProductId = showroom.ProductId;
+                UserShowroom.Product = null;
+                UserShowroom.Showroomer = null;
+                ShowroomList.Add(UserShowroom);
+            }
+            item.Showrooms = ShowroomList;
+            #endregion
+
+            // Unset variables that are unused
+            InteractionList = null;
+            InteractionQuery = null;
+            VoucherList = null;
+            Query = null;
+            ShowroomList = null;
+            ShowroomQuery = null;
+
             return new ObjectResult(item);
         }
         #endregion
@@ -95,6 +187,10 @@ namespace CoreMVC.Controllers
             Showroomer.Description = item.Description;
             Showroomer.Latitude = item.Latitude;
             Showroomer.Longitude = item.Longitude;
+            Showroomer.Interactions = null;
+            Showroomer.Orders = null;
+            Showroomer.Showrooms = null;
+            Showroomer.Vouchers = null;
 
             _repository.Update(Showroomer);
             return new NoContentResult();

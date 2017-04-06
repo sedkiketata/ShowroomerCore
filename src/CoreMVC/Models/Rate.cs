@@ -7,6 +7,7 @@ namespace CoreMVC.Models
 {
     public class Rate : Interaction
     {
+        ~Rate() { }
         public int Mark { get; set; }
     }
 }

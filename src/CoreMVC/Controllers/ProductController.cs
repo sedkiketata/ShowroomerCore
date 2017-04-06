@@ -36,7 +36,25 @@ namespace CoreMVC.Controllers
             [HttpGet]
             public IEnumerable<Product> GetAll()
             {
-                return _repository.GetAll();
+                List<Product> ListProduct = new List<Product>();
+                foreach (Product ProductOne in _repository.GetAll())
+                {
+                    Product NewProduct = new Product();
+                    NewProduct.Brand = ProductOne.Brand;
+                    NewProduct.Category = ProductOne.Category;
+                    NewProduct.Discount = ProductOne.Discount;
+                    NewProduct.Name = ProductOne.Name;
+                    NewProduct.Price = ProductOne.Price;
+                    NewProduct.ProductId = ProductOne.ProductId;
+                    NewProduct.Quantity = ProductOne.Quantity;
+                    NewProduct.TVA = ProductOne.TVA;
+                    NewProduct.Showrooms = null;
+                    NewProduct.Orders = null;
+                    NewProduct.Interactions = null;
+                    NewProduct.Images = null;
+                    ListProduct.Add(NewProduct);
+                }
+                return ListProduct;
             } 
             #endregion
 
@@ -56,6 +74,7 @@ namespace CoreMVC.Controllers
                     return NotFound();
                 }
 
+
             #region  Interactions List
             // Rate list for the user that he commented for this product
             List<Interaction> InteractionList = new List<Interaction>();
@@ -68,6 +87,8 @@ namespace CoreMVC.Controllers
                 UserRate.InteractionId = interaction.InteractionId;
                 UserRate.ProductId = interaction.ProductId;
                 UserRate.UserId = interaction.UserId;
+                UserRate.User = null;
+                UserRate.Product = null;
                 InteractionList.Add(UserRate);
             }
             item.Interactions = InteractionList;
@@ -84,6 +105,8 @@ namespace CoreMVC.Controllers
                 showrooms.ShowroomerId = showroom.ShowroomerId;
                 showrooms.ProductId = showroom.ProductId;
                 showrooms.ShowroomId = showroom.ShowroomId;
+                showrooms.Product = null;
+                showrooms.Showroomer = null;
                 ShowroomsList.Add(showrooms);
             }
             item.Showrooms = ShowroomsList;
@@ -101,10 +124,20 @@ namespace CoreMVC.Controllers
                 images.Name = image.Name;
                 images.ProductId = image.ProductId;
                 images.Url = image.Url;
+                images.Product = null;
                 ImagesList.Add(images);
             }
             item.Images = ImagesList;
             #endregion
+
+            // Unset variables that are unused
+            InteractionList = null;
+            InteractionQuery = null;
+            ShowroomsList = null;
+            ShowroomQuery = null;
+            ImagesList = null;
+            ImageQuery = null;
+
 
             return new ObjectResult(item);
             } 
@@ -153,7 +186,10 @@ namespace CoreMVC.Controllers
                 product.Price = item.Price;
                 product.Quantity = item.Quantity;
                 product.TVA = item.TVA;
-
+                product.Images = null;
+                product.Interactions = null;
+                product.Orders = null;
+                product.Showrooms = null;
                 _repository.Update(product);
                 return new NoContentResult();
             }

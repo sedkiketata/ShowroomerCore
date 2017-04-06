@@ -10,6 +10,7 @@ namespace CoreMVC.Models
 {
     public class Product
     {
+        ~Product() { }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long ProductId { get; set; }
@@ -23,10 +24,13 @@ namespace CoreMVC.Models
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Interaction> Interactions { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Order> Orders { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Showroom> Showrooms { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Image> Images { get; set; }
     }

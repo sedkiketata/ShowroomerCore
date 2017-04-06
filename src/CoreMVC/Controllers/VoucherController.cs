@@ -32,7 +32,20 @@ namespace CoreMVC.Controllers
         [HttpGet]
         public IEnumerable<Voucher> GetAll()
         {
-            return _repository.GetAll();
+            List<Voucher> ListVoucher = new List<Voucher>();
+            foreach (Voucher VoucherOne in _repository.GetAll())
+            {
+                Voucher NewVoucher = new Voucher();
+                NewVoucher.Amount = VoucherOne.Amount;
+                NewVoucher.Description = VoucherOne.Description;
+                NewVoucher.Name = VoucherOne.Name;
+                NewVoucher.Reference = VoucherOne.Reference;
+                NewVoucher.UserId = VoucherOne.UserId;
+                NewVoucher.VoucherId = VoucherOne.VoucherId;
+                NewVoucher.User = null;
+                ListVoucher.Add(NewVoucher);
+            }
+            return ListVoucher;
         }
 
         #endregion
@@ -53,12 +66,20 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
+
             User SelectedUser = new Models.User();
             SelectedUser.Username = _userRepository.Find(item.UserId).Username;
             SelectedUser.City = _userRepository.Find(item.UserId).City;
             SelectedUser.Street = _userRepository.Find(item.UserId).Street;
             SelectedUser.ZipCode = _userRepository.Find(item.UserId).ZipCode;
+            SelectedUser.Interactions = null;
+            SelectedUser.Orders = null;
+            SelectedUser.Vouchers = null;
             item.User = SelectedUser;
+
+            // Unset variables that are unused
+            SelectedUser = null;
+
             return new ObjectResult(item);
         }
 
@@ -107,6 +128,7 @@ namespace CoreMVC.Controllers
             v.Description = voucher.Description;
             v.Amount = voucher.Amount;
             v.UserId = voucher.UserId;
+            v.User = null;
        
             _repository.Update(v);
             return new NoContentResult();

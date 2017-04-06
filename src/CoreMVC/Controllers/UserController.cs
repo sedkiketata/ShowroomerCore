@@ -34,7 +34,20 @@ namespace CoreMVC.Controllers
         [HttpGet]
         public IEnumerable<User> GetAll()
         {
-            return _repository.GetAll();
+            List<User> ListUser = new List<User>();
+            foreach (User UserOne in _repository.GetAll())
+            {
+                User NewUser = new User();
+                NewUser.City = UserOne.City;
+                NewUser.Street = UserOne.Street;
+                NewUser.UserId = UserOne.UserId;
+                NewUser.Username = UserOne.Username;
+                NewUser.Vouchers = null;
+                NewUser.Orders = null;
+                NewUser.Interactions = null;
+                ListUser.Add(NewUser);
+            }
+            return ListUser;
         }
         #endregion
 
@@ -66,6 +79,8 @@ namespace CoreMVC.Controllers
                 UserRate.InteractionId = interaction.InteractionId;
                 UserRate.ProductId = interaction.ProductId;
                 UserRate.UserId = interaction.UserId;
+                UserRate.Product = null;
+                UserRate.User = null;
                 InteractionList.Add(UserRate);
             }
             item.Interactions = InteractionList;
@@ -91,6 +106,12 @@ namespace CoreMVC.Controllers
             item.Vouchers = VoucherList;
             // End Vouchers List 
             #endregion
+
+            // Unset variables that are unused
+            InteractionList = null;
+            InteractionQuery = null;
+            VoucherList = null;
+            Query = null;
 
             return new ObjectResult(item);
         }
@@ -136,6 +157,9 @@ namespace CoreMVC.Controllers
             User.Street = item.Street;
             User.ZipCode = item.ZipCode;
             User.City = item.City;
+            User.Interactions = null;
+            User.Orders = null;
+            User.Vouchers = null;
 
             _repository.Update(User);
             return new NoContentResult();

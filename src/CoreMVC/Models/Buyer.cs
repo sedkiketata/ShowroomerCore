@@ -7,6 +7,7 @@ namespace CoreMVC.Models
 {
     public class Buyer : User
     {
+        ~Buyer() { }
         public string DeliveryAddress { get; set; }
     }
 }

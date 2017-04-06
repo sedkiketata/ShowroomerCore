@@ -15,11 +15,13 @@ namespace CoreMVC.Controllers
     public class ImageController : Controller
     {
         private readonly IImageRepository _repository;
+        private readonly IProductRepository _productRepository;
 
         #region Contructor
-        public ImageController(IImageRepository repository)
+        public ImageController(IImageRepository repository, IProductRepository productRepository)
         {
             _repository = repository;
+            _productRepository = productRepository;
         }
         #endregion
 
@@ -29,7 +31,18 @@ namespace CoreMVC.Controllers
         [HttpGet]
         public IEnumerable<Image> GetAll()
         {
-            return _repository.GetAll();
+            List<Image> ListImages = new List<Image>();
+            foreach (Image ImageOne in _repository.GetAll())
+            {
+                Image NewImage = new Image();
+                NewImage.ImageId = ImageOne.ImageId;
+                NewImage.Name = ImageOne.Name;
+                NewImage.ProductId = ImageOne.ProductId;
+                NewImage.Url = ImageOne.Url;
+                NewImage.Product = null;
+                ListImages.Add(NewImage);
+            }
+            return ListImages;
         }
         #endregion
 
@@ -48,7 +61,22 @@ namespace CoreMVC.Controllers
             {
                 return NotFound();
             }
-           
+            var CommentProduct = _productRepository.Find(item.ProductId);
+            Product Product = new Product();
+            Product.ProductId = CommentProduct.ProductId;
+            Product.Name = CommentProduct.Name;
+            Product.Price = CommentProduct.Price;
+            Product.Quantity = CommentProduct.Quantity;
+            Product.TVA = CommentProduct.TVA;
+            Product.Brand = CommentProduct.Brand;
+            Product.Category = CommentProduct.Category;
+            Product.Discount = CommentProduct.Discount;
+            Product.Images = null;
+            Product.Interactions = null;
+            Product.Orders = null;
+            Product.Showrooms = null;
+            item.Product = Product;
+
             return new ObjectResult(item);
         }
         #endregion
@@ -93,6 +121,7 @@ namespace CoreMVC.Controllers
             images.Name = item.Name;
             images.ProductId = item.ProductId;
             images.Url = item.Url;
+            images.Product = null;
 
             _repository.Update(images);
             return new NoContentResult();
