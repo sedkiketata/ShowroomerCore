@@ -18,15 +18,18 @@ namespace CoreMVC.Controllers
         private readonly IInteractionRepository _interactionRepository;
         private readonly IVoucherRepository _voucherRepository;
         private readonly IShowroomRepository _showroomRepository;
+        private readonly IProductRepository _productRepository;
 
         #region Contructor
         public ShowroomerController(IShowroomerRepository repository, IVoucherRepository voucherRepository,
-            IInteractionRepository interactionRepository, IShowroomRepository showroomRepository)
+            IInteractionRepository interactionRepository, IShowroomRepository showroomRepository,
+            IProductRepository productRepository)
         {
             _repository = repository;
             _voucherRepository = voucherRepository;
             _interactionRepository = interactionRepository;
             _showroomRepository = showroomRepository;
+            _productRepository = productRepository;
         }
         #endregion
 
@@ -47,6 +50,7 @@ namespace CoreMVC.Controllers
                 NewShowroomer.Street = ShowroomerOne.Street;
                 NewShowroomer.Username = ShowroomerOne.Username;
                 NewShowroomer.ZipCode = ShowroomerOne.ZipCode;
+                NewShowroomer.UserId = ShowroomerOne.UserId;
                 NewShowroomer.Vouchers = null;
                 NewShowroomer.Showrooms = null;
                 NewShowroomer.Orders = null;
@@ -73,7 +77,6 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-
             #region  Interactions List
             // Rate list for the user that he commented for this product
             List<Interaction> InteractionList = new List<Interaction>();
@@ -85,7 +88,6 @@ namespace CoreMVC.Controllers
                 Interaction UserRate = new Interaction();
                 UserRate.InteractionId = interaction.InteractionId;
                 UserRate.ProductId = interaction.ProductId;
-                UserRate.UserId = interaction.UserId;
                 UserRate.User = null;
                 UserRate.Product = null;
                 InteractionList.Add(UserRate);
@@ -123,9 +125,25 @@ namespace CoreMVC.Controllers
             foreach (var showroom in ShowroomQuery)
             {
                 Showroom UserShowroom  = new Showroom();
-                UserShowroom.ShowroomerId = showroom.ShowroomerId;
                 UserShowroom.ProductId = showroom.ProductId;
-                UserShowroom.Product = null;
+                UserShowroom.ShowroomId = showroom.ShowroomId;
+                // Product that this user accept to be showroom
+                var ProductQuery = from product in _productRepository.GetAll()
+                                   where product.ProductId == showroom.ProductId
+                                   select product;
+                if (ProductQuery == null)
+                    UserShowroom.Product = null;
+                else
+                {
+                    Product NewProduct = new Product();
+                    var OldProduct = ProductQuery.First();
+                    NewProduct = OldProduct;
+                    NewProduct.Images = null;
+                    NewProduct.Interactions = null;
+                    NewProduct.Orders = null;
+                    NewProduct.Showrooms = null;
+                    UserShowroom.Product = NewProduct;
+                }
                 UserShowroom.Showroomer = null;
                 ShowroomList.Add(UserShowroom);
             }
