@@ -14,207 +14,199 @@ namespace CoreMVC.Controllers
     [Route("api/[controller]")]
     public class ProductController : Controller
     {
-            private readonly IProductRepository _repository;
-            private readonly IInteractionRepository _interactionRepository;
-            private readonly IShowroomRepository _showroomRepository;
-            private readonly IImageRepository _imageRepository;
+        private readonly IProductRepository _repository;
+        private readonly IInteractionRepository _interactionRepository;
+        private readonly IShowroomRepository _showroomRepository;
+        private readonly IImageRepository _imageRepository;
+        private readonly IUserRepository _userRespository;
 
-            #region Contructor
-            public ProductController(IProductRepository repository, IInteractionRepository interactionRepository,
-                IShowroomRepository showroomRepository, IImageRepository imageRepository)
+        #region Contructor
+        public ProductController(IProductRepository repository, IInteractionRepository interactionRepository,
+            IShowroomRepository showroomRepository, IImageRepository imageRepository,
+            IUserRepository userRepository)
+        {
+            _repository = repository;
+            _interactionRepository = interactionRepository;
+            _showroomRepository = showroomRepository;
+            _imageRepository = imageRepository;
+            _userRespository = userRepository;
+        } 
+        #endregion
+
+        #region GetAll Method
+        // GET: api/values
+        [Route("[action]")]
+        [HttpGet]
+        public IEnumerable<Product> GetAll()
+        {
+            List<Product> ListProduct = new List<Product>();
+            foreach (Product ProductOne in _repository.GetAll())
             {
-                _repository = repository;
-                _interactionRepository = interactionRepository;
-                _showroomRepository = showroomRepository;
-                _imageRepository = imageRepository;
-            } 
-            #endregion
-
-            #region GetAll Method
-            // GET: api/values
-            [Route("[action]")]
-            [HttpGet]
-            public IEnumerable<Product> GetAll()
-            {
-                List<Product> ListProduct = new List<Product>();
-                foreach (Product ProductOne in _repository.GetAll())
-                {
-                    Product NewProduct = new Product();
-                    NewProduct.Brand = ProductOne.Brand;
-                    NewProduct.Category = ProductOne.Category;
-                    NewProduct.Discount = ProductOne.Discount;
-                    NewProduct.Name = ProductOne.Name;
-                    NewProduct.Price = ProductOne.Price;
-                    NewProduct.ProductId = ProductOne.ProductId;
-                    NewProduct.Quantity = ProductOne.Quantity;
-                    NewProduct.TVA = ProductOne.TVA;
-                    NewProduct.Showrooms = null;
-                    NewProduct.Orders = null;
-                    NewProduct.Interactions = null;
-                    NewProduct.Images = null;
-                    ListProduct.Add(NewProduct);
-                }
-                return ListProduct;
-            } 
-            #endregion
-
-            #region Get Method
-            // GET api/values/5
-            [HttpGet(Name = "GetProduct")]
-            public IActionResult Get()
-            {
-                StringValues hearderValues;
-                var firstValue = string.Empty;
-                if (Request.Headers.TryGetValue("id", out hearderValues))
-                    firstValue = hearderValues.FirstOrDefault();
-                long id = Convert.ToInt64(firstValue);
-                var item = _repository.Find(id);
-                if (item == null)
-                {
-                    return NotFound();
-                }
-
-
-            #region  Interactions List
-            // Rate list for the user that he commented for this product
-            List<Interaction> InteractionList = new List<Interaction>();
-            var InteractionQuery = from interaction in _interactionRepository.GetAll()
-                                   where interaction.ProductId == item.ProductId
-                                   select interaction;
-            foreach (var interaction in InteractionQuery)
-            {
-                Interaction UserRate = new Interaction();
-                UserRate.InteractionId = interaction.InteractionId;
-                UserRate.ProductId = interaction.ProductId;
-                UserRate.UserId = interaction.UserId;
-                UserRate.User = null;
-                UserRate.Product = null;
-                InteractionList.Add(UserRate);
+                Product NewProduct = new Product();
+                NewProduct = ProductOne;
+                NewProduct.Orders = null;
+                NewProduct.Interactions = null;
+                NewProduct.Images = null;
+                ListProduct.Add(NewProduct);
             }
-            item.Interactions = InteractionList;
-            #endregion
+            return ListProduct;
+        } 
+        #endregion
 
-            #region Showrooms List
-            List<Showroom> ShowroomsList = new List<Showroom>();
-            var ShowroomQuery = from showroom in _showroomRepository.GetAll()
-                                   where showroom.ProductId == item.ProductId
-                                   select showroom;
-            foreach (var showroom in ShowroomQuery)
+        #region Get Method
+        // GET api/values/5
+        [HttpGet(Name = "GetProduct")]
+        public IActionResult Get()
+        {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
+            var item = _repository.Find(id);
+            if (item == null)
             {
-                Showroom showrooms = new Showroom();
-                showrooms.ShowroomerId = showroom.ShowroomerId;
-                showrooms.ProductId = showroom.ProductId;
-                showrooms.ShowroomId = showroom.ShowroomId;
-                showrooms.Product = null;
-                showrooms.Showroomer = null;
-                ShowroomsList.Add(showrooms);
-            }
-            item.Showrooms = ShowroomsList;
-            #endregion
-
-            #region Images List
-            List<Image> ImagesList = new List<Image>();
-            var ImageQuery = from image in _imageRepository.GetAll()
-                             where image.ProductId == item.ProductId
-                             select image;
-            foreach (var image in ImageQuery)
-            {
-                Image images = new Image();
-                images.ImageId = image.ImageId;
-                images.Name = image.Name;
-                images.ProductId = image.ProductId;
-                images.Url = image.Url;
-                images.Product = null;
-                ImagesList.Add(images);
-            }
-            item.Images = ImagesList;
-            #endregion
-
-            // Unset variables that are unused
-            InteractionList = null;
-            InteractionQuery = null;
-            ShowroomsList = null;
-            ShowroomQuery = null;
-            ImagesList = null;
-            ImageQuery = null;
-
-
-            return new ObjectResult(item);
-            } 
-            #endregion
-
-            #region Create Method
-            // POST api/values
-            [HttpPost]
-            public IActionResult Create([FromBody] Product value)
-            {
-                if (value == null)
-                {
-                    return BadRequest();
-                }
-                _repository.Add(value);
-                return CreatedAtRoute("GetProduct", new { id = value.ProductId }, value);
-            } 
-            #endregion
-
-            #region Update Method
-
-            // PUT api/values/5
-            [HttpPut]
-            public IActionResult Update([FromBody] Product item)
-            {
-                StringValues hearderValues;
-                var firstValue = string.Empty;
-                if (Request.Headers.TryGetValue("id", out hearderValues))
-                    firstValue = hearderValues.FirstOrDefault();
-                long id = Convert.ToInt64(firstValue);
-                if (item == null || item.ProductId != id)
-                {
-                    return BadRequest();
-                }
-
-                var product = _repository.Find(id);
-                if (product == null)
-                {
-                    return NotFound();
-                }
-
-                product.Brand = item.Brand;
-                product.Category = item.Category;
-                product.Discount = item.Discount;
-                product.Name = item.Name;
-                product.Price = item.Price;
-                product.Quantity = item.Quantity;
-                product.TVA = item.TVA;
-                product.Images = null;
-                product.Interactions = null;
-                product.Orders = null;
-                product.Showrooms = null;
-                _repository.Update(product);
-                return new NoContentResult();
+                return NotFound();
             }
 
-            #endregion
 
-            #region Delete Method
-            // DELETE api/values/5
-            [HttpDelete]
-            public IActionResult Delete()
+        #region  Interactions List
+        // Rate list for the user that he commented for this product
+        List<Interaction> InteractionList = new List<Interaction>();
+        var InteractionQuery = from interaction in _interactionRepository.GetAll()
+                                where interaction.ProductId == item.ProductId
+                                select interaction;
+        foreach (var interaction in InteractionQuery)
+        {
+            long? idNull = null;
+            Interaction UserRate = new Interaction();
+            UserRate = interaction;
+            UserRate.ProductId = (long) idNull;
+            var UserInteracted = _userRespository.Find(interaction.UserId);
+                UserInteracted.Vouchers = null;
+                UserInteracted.Orders = null;
+                UserInteracted.Interactions = null;
+            UserRate.User = UserInteracted;
+            UserRate.Product = null;
+            InteractionList.Add(UserRate);
+        }
+        item.Interactions = InteractionList;
+        #endregion
+
+        #region Showrooms List
+        List<Showroom> ShowroomsList = new List<Showroom>();
+        var ShowroomQuery = from showroom in _showroomRepository.GetAll()
+                                where showroom.ProductId == item.ProductId
+                                select showroom;
+        foreach (var showroom in ShowroomQuery)
+        {
+            long? idNull = null;
+            Showroom showrooms = new Showroom();
+            showrooms = showroom;
+            showrooms.ProductId = (long)idNull;
+            showrooms.Product = null;
+            showrooms.Showroomer = null;
+            ShowroomsList.Add(showrooms);
+        }
+        item.Showrooms = ShowroomsList;
+        #endregion
+
+        #region Images List
+        List<Image> ImagesList = new List<Image>();
+        var ImageQuery = from image in _imageRepository.GetAll()
+                            where image.ProductId == item.ProductId
+                            select image;
+        foreach (var image in ImageQuery)
+        {
+            long? idNull = null;
+            Image images = new Image();
+            images = image;
+            images.ProductId = (long)idNull;
+            images.Product = null;
+            ImagesList.Add(images);
+        }
+        item.Images = ImagesList;
+        #endregion
+
+        // Unset variables that are unused
+        InteractionList = null;
+        InteractionQuery = null;
+        ShowroomsList = null;
+        ShowroomQuery = null;
+        ImagesList = null;
+        ImageQuery = null;
+
+
+        return new ObjectResult(item);
+        } 
+        #endregion
+
+        #region Create Method
+        // POST api/values
+        [HttpPost]
+        public IActionResult Create([FromBody] Product value)
+        {
+            if (value == null)
             {
-                StringValues hearderValues;
-                var firstValue = string.Empty;
-                if (Request.Headers.TryGetValue("id", out hearderValues))
-                    firstValue = hearderValues.FirstOrDefault();
-                long id = Convert.ToInt64(firstValue);
-                var item = _repository.Find(id);
-                if (item == null)
-                {
-                    return NotFound();
-                }
-                _repository.Remove(id);
-                return new NoContentResult();
-            } 
-            #endregion
+                return BadRequest();
+            }
+            _repository.Add(value);
+            return CreatedAtRoute("GetProduct", new { id = value.ProductId }, value);
+        } 
+        #endregion
+
+        #region Update Method
+
+        // PUT api/values/5
+        [HttpPut]
+        public IActionResult Update([FromBody] Product item)
+        {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
+            if (item == null || item.ProductId != id)
+            {
+                return BadRequest();
+            }
+
+            var product = _repository.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product = item;
+            product.Images = null;
+            product.Interactions = null;
+            product.Orders = null;
+            product.Showrooms = null;
+            _repository.Update(product);
+            return new NoContentResult();
+        }
+
+        #endregion
+
+        #region Delete Method
+        // DELETE api/values/5
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
+            var item = _repository.Find(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            _repository.Remove(id);
+            return new NoContentResult();
+        } 
+        #endregion
 
     }
 }

@@ -36,12 +36,7 @@ namespace CoreMVC.Controllers
             foreach (Voucher VoucherOne in _repository.GetAll())
             {
                 Voucher NewVoucher = new Voucher();
-                NewVoucher.Amount = VoucherOne.Amount;
-                NewVoucher.Description = VoucherOne.Description;
-                NewVoucher.Name = VoucherOne.Name;
-                NewVoucher.Reference = VoucherOne.Reference;
-                NewVoucher.UserId = VoucherOne.UserId;
-                NewVoucher.VoucherId = VoucherOne.VoucherId;
+                NewVoucher = VoucherOne;
                 NewVoucher.User = null;
                 ListVoucher.Add(NewVoucher);
             }
@@ -68,10 +63,7 @@ namespace CoreMVC.Controllers
             }
 
             User SelectedUser = new Models.User();
-            SelectedUser.Username = _userRepository.Find(item.UserId).Username;
-            SelectedUser.City = _userRepository.Find(item.UserId).City;
-            SelectedUser.Street = _userRepository.Find(item.UserId).Street;
-            SelectedUser.ZipCode = _userRepository.Find(item.UserId).ZipCode;
+            SelectedUser = _userRepository.Find(item.UserId);
             SelectedUser.Interactions = null;
             SelectedUser.Orders = null;
             SelectedUser.Vouchers = null;
@@ -123,11 +115,7 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            v.Reference = voucher.Reference;
-            v.Name = voucher.Name;
-            v.Description = voucher.Description;
-            v.Amount = voucher.Amount;
-            v.UserId = voucher.UserId;
+            v = voucher;
             v.User = null;
        
             _repository.Update(v);

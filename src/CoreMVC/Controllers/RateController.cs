@@ -37,10 +37,7 @@ namespace CoreMVC.Controllers
             foreach (Rate RateOne in _repository.GetAll())
             {
                 Rate NewRate = new Rate();
-                NewRate.InteractionId = RateOne.InteractionId;
-                NewRate.Mark = RateOne.Mark;
-                NewRate.ProductId = RateOne.ProductId;
-                NewRate.UserId = RateOne.UserId;
+                NewRate = RateOne;
                 NewRate.User = null;
                 NewRate.Product = null;
                 ListRate.Add(NewRate);
@@ -68,11 +65,7 @@ namespace CoreMVC.Controllers
             // Create the user object inside the Rate
             var RateUser = _userRepository.Find(item.UserId);
             User NewUser = new User();
-            NewUser.UserId = RateUser.UserId;
-            NewUser.City = RateUser.City;
-            NewUser.Street = RateUser.Street;
-            NewUser.ZipCode = RateUser.ZipCode;
-            NewUser.Username = RateUser.Username;
+            NewUser = RateUser;
             NewUser.Vouchers = null;
             NewUser.Orders = null;
             NewUser.Interactions = null;
@@ -81,14 +74,7 @@ namespace CoreMVC.Controllers
             // Create the product object inside the Rate
             var RateProduct = _productRepository.Find(item.ProductId);
             Product Product = new Product();
-            Product.ProductId = RateProduct.ProductId;
-            Product.Name = RateProduct.Name;
-            Product.Price = RateProduct.Price;
-            Product.Quantity = RateProduct.Quantity;
-            Product.TVA = RateProduct.TVA;
-            Product.Brand = RateProduct.Brand;
-            Product.Category = RateProduct.Category;
-            Product.Discount = RateProduct.Discount;
+            Product = RateProduct;
             Product.Images = null;
             Product.Interactions = null;
             Product.Orders = null;
@@ -141,10 +127,7 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
             
-            Rate.InteractionId = item.InteractionId;
-            Rate.ProductId = item.ProductId;
-            Rate.Mark = item.Mark;
-            Rate.UserId = item.UserId;
+            Rate = item;
             Rate.User = null;
             Rate.Product = null;
 

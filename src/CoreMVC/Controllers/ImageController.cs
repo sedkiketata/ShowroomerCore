@@ -35,10 +35,7 @@ namespace CoreMVC.Controllers
             foreach (Image ImageOne in _repository.GetAll())
             {
                 Image NewImage = new Image();
-                NewImage.ImageId = ImageOne.ImageId;
-                NewImage.Name = ImageOne.Name;
-                NewImage.ProductId = ImageOne.ProductId;
-                NewImage.Url = ImageOne.Url;
+                NewImage = ImageOne;
                 NewImage.Product = null;
                 ListImages.Add(NewImage);
             }
@@ -63,14 +60,7 @@ namespace CoreMVC.Controllers
             }
             var CommentProduct = _productRepository.Find(item.ProductId);
             Product Product = new Product();
-            Product.ProductId = CommentProduct.ProductId;
-            Product.Name = CommentProduct.Name;
-            Product.Price = CommentProduct.Price;
-            Product.Quantity = CommentProduct.Quantity;
-            Product.TVA = CommentProduct.TVA;
-            Product.Brand = CommentProduct.Brand;
-            Product.Category = CommentProduct.Category;
-            Product.Discount = CommentProduct.Discount;
+            Product = CommentProduct;
             Product.Images = null;
             Product.Interactions = null;
             Product.Orders = null;
@@ -117,10 +107,7 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            images.ImageId = item.ImageId;
-            images.Name = item.Name;
-            images.ProductId = item.ProductId;
-            images.Url = item.Url;
+            images = item;
             images.Product = null;
 
             _repository.Update(images);

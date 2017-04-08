@@ -35,12 +35,7 @@ namespace CoreMVC.Controllers
             foreach (Buyer OneBuyer in _repository.GetAll())
             {
                 Buyer NewBuyer = new Buyer();
-                NewBuyer.City = OneBuyer.City;
-                NewBuyer.DeliveryAddress = OneBuyer.DeliveryAddress;
-                NewBuyer.Street = OneBuyer.Street;
-                NewBuyer.UserId = OneBuyer.UserId;
-                NewBuyer.Username = OneBuyer.Username;
-                NewBuyer.ZipCode = OneBuyer.ZipCode;
+                NewBuyer = OneBuyer;
                 NewBuyer.Vouchers = null;
                 NewBuyer.Orders = null;
                 NewBuyer.Interactions = null;
@@ -75,10 +70,10 @@ namespace CoreMVC.Controllers
                                    select interaction;
             foreach (var interaction in InteractionQuery)
             {
+                long? idNull = null;
                 Interaction UserRate = new Interaction();
-                UserRate.InteractionId = interaction.InteractionId;
-                UserRate.ProductId = interaction.ProductId;
-                UserRate.UserId = interaction.UserId;
+                UserRate = interaction;
+                UserRate.UserId = (long)idNull;
                 UserRate.Product = null;
                 UserRate.User = null;
                 InteractionList.Add(UserRate);
@@ -130,11 +125,7 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            Buyer.Username = item.Username;
-            Buyer.Street = item.Street;
-            Buyer.ZipCode = item.ZipCode;
-            Buyer.City = item.City;
-            Buyer.DeliveryAddress = item.DeliveryAddress;
+            Buyer = item;
             Buyer.Interactions = null;
             Buyer.Orders = null;
             Buyer.Vouchers = null;

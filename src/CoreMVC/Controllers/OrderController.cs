@@ -40,11 +40,7 @@ namespace CoreMVC.Controllers
             foreach (Order OrderOne in _repository.GetAll())
             {
                 Order NewOrder = new Order();
-                NewOrder.OrderId = OrderOne.OrderId;
-                NewOrder.ProductId = OrderOne.ProductId;
-                NewOrder.PurchaseId = OrderOne.PurchaseId;
-                NewOrder.Quantity = OrderOne.Quantity;
-                NewOrder.UserId = OrderOne.UserId;
+                NewOrder = OrderOne;
                 NewOrder.User = null;
                 NewOrder.Purchase = null;
                 NewOrder.Product = null;
@@ -75,11 +71,7 @@ namespace CoreMVC.Controllers
             User User = new Models.User();
 
             // item.User = SelectedUser;
-            User.UserId = SelectedUser.UserId;
-            User.Username = SelectedUser.Username;
-            User.City = SelectedUser.City;
-            User.Street = SelectedUser.Street;
-            User.ZipCode = SelectedUser.ZipCode;
+            User = SelectedUser;
             User.Interactions = null;
             User.Orders = null;
             User.Vouchers = null;
@@ -87,14 +79,7 @@ namespace CoreMVC.Controllers
 
             var SelectedProduct = _productRepository.Find(item.ProductId);
             Product Product = new Product();
-            Product.ProductId = SelectedProduct.ProductId;
-            Product.Name = SelectedProduct.Name;
-            Product.Price = SelectedProduct.Price;
-            Product.Quantity = SelectedProduct.Quantity;
-            Product.TVA = SelectedProduct.TVA;
-            Product.Brand = SelectedProduct.Brand;
-            Product.Category = SelectedProduct.Category;
-            Product.Discount = SelectedProduct.Discount;
+            Product = SelectedProduct;
             Product.Images = null;
             Product.Interactions = null;
             Product.Orders = null;
@@ -103,10 +88,7 @@ namespace CoreMVC.Controllers
 
             var SelectedPurchase = _purchaseRepository.Find(item.PurchaseId);
             Purchase purchase = new Purchase();
-            purchase.PurchaseId = SelectedPurchase.PurchaseId;
-            purchase.Status = SelectedPurchase.Status;
-            purchase.Total = SelectedPurchase.Total;
-            purchase.DatePurchase = SelectedPurchase.DatePurchase;
+            purchase = SelectedPurchase;
             purchase.Orders = null;
             item.Purchase = purchase;
 

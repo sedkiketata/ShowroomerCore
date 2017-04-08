@@ -43,11 +43,7 @@ namespace CoreMVC.Controllers
             foreach (Comment CommentOne in _repository.GetAll())
             {
                 Comment NewComment = new Comment();
-                NewComment.Date = CommentOne.Date;
-                NewComment.InteractionId = CommentOne.InteractionId;
-                NewComment.ProductId = CommentOne.ProductId;
-                NewComment.Text = CommentOne.Text;
-                NewComment.UserId = CommentOne.UserId;
+                NewComment = CommentOne;
                 NewComment.User = null;
                 NewComment.Product = null;
                 ListComment.Add(NewComment);
@@ -77,11 +73,7 @@ namespace CoreMVC.Controllers
             var CommentUser = _userRepository.Find(item.UserId);
 
             User NewUser = new User();
-            NewUser.UserId = CommentUser.UserId;
-            NewUser.City = CommentUser.City;
-            NewUser.Street = CommentUser.Street;
-            NewUser.ZipCode = CommentUser.ZipCode;
-            NewUser.Username = CommentUser.Username;
+            NewUser = CommentUser;
             NewUser.Interactions = null;
             NewUser.Orders = null;
             NewUser.Vouchers = null;
@@ -93,14 +85,7 @@ namespace CoreMVC.Controllers
             // -- Create the product object inside the Comment -- 
             var CommentProduct = _productRepository.Find(item.ProductId);
             Product Product = new Product();
-            Product.ProductId = CommentProduct.ProductId;
-            Product.Name = CommentProduct.Name;
-            Product.Price = CommentProduct.Price;
-            Product.Quantity = CommentProduct.Quantity;
-            Product.TVA = CommentProduct.TVA;
-            Product.Brand = CommentProduct.Brand;
-            Product.Category = CommentProduct.Category;
-            Product.Discount = CommentProduct.Discount;
+            Product = CommentProduct;
             Product.Images = null;
             Product.Interactions = null;
             Product.Orders = null;
@@ -157,11 +142,8 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
+            Comment = item;
             Comment.Date = DateTime.Now;
-            Comment.InteractionId = item.InteractionId;
-            Comment.ProductId = item.ProductId;
-            Comment.Text = item.Text;
-            Comment.UserId = item.UserId;
             Comment.Product = null;
             Comment.User = null;
 

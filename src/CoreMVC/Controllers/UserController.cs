@@ -17,14 +17,16 @@ namespace CoreMVC.Controllers
         private readonly IUserRepository _repository;
         private readonly IInteractionRepository _interactionRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly IProductRepository _productRepository;
 
         #region Contructor
         public UserController(IUserRepository repository, IInteractionRepository interactionRepository
-            , IVoucherRepository voucherRepository)
+            , IVoucherRepository voucherRepository, IProductRepository productRepository)
         {
             _repository = repository;
             _interactionRepository = interactionRepository;
             _voucherRepository = voucherRepository;
+            _productRepository = productRepository;
         }
         #endregion
 
@@ -38,10 +40,7 @@ namespace CoreMVC.Controllers
             foreach (User UserOne in _repository.GetAll())
             {
                 User NewUser = new User();
-                NewUser.City = UserOne.City;
-                NewUser.Street = UserOne.Street;
-                NewUser.UserId = UserOne.UserId;
-                NewUser.Username = UserOne.Username;
+                NewUser = UserOne;
                 NewUser.Vouchers = null;
                 NewUser.Orders = null;
                 NewUser.Interactions = null;
@@ -75,11 +74,12 @@ namespace CoreMVC.Controllers
                                    select interaction;
             foreach (var interaction in InteractionQuery)
             {
+                long? idNull = null;
                 Interaction UserRate = new Interaction();
-                UserRate.InteractionId = interaction.InteractionId;
-                UserRate.ProductId = interaction.ProductId;
-                UserRate.UserId = interaction.UserId;
-                UserRate.Product = null;
+                UserRate = interaction;
+                UserRate.InteractionId = (long)idNull;
+                var InteractedProduct = _productRepository.Find(interaction.ProductId);
+                UserRate.Product = InteractedProduct;
                 UserRate.User = null;
                 InteractionList.Add(UserRate);
             }
@@ -95,12 +95,7 @@ namespace CoreMVC.Controllers
             foreach (var voucher in Query)
             {
                 Voucher v = new Voucher();
-                v.Amount = voucher.Amount;
-                v.Description = voucher.Description;
-                v.Name = voucher.Name;
-                v.Reference = voucher.Reference;
-                v.UserId = voucher.UserId;
-                v.VoucherId = voucher.VoucherId;
+                v = voucher;
                 VoucherList.Add(v);
             }
             item.Vouchers = VoucherList;
@@ -153,10 +148,7 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            User.Username = item.Username;
-            User.Street = item.Street;
-            User.ZipCode = item.ZipCode;
-            User.City = item.City;
+            User = item;
             User.Interactions = null;
             User.Orders = null;
             User.Vouchers = null;

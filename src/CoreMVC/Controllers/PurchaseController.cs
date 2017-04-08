@@ -33,10 +33,7 @@ namespace CoreMVC.Controllers
             foreach (Purchase PurchaseOne in _repository.GetAll())
             {
                 Purchase NewPurchase = new Purchase();
-                NewPurchase.DatePurchase = PurchaseOne.DatePurchase;
-                NewPurchase.PurchaseId = PurchaseOne.PurchaseId;
-                NewPurchase.Status = PurchaseOne.Status;
-                NewPurchase.Total = PurchaseOne.Total;
+                NewPurchase = PurchaseOne;
                 NewPurchase.Orders = null;
                 ListPurchase.Add(NewPurchase);
             }

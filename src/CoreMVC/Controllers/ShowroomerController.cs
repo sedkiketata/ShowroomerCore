@@ -43,14 +43,7 @@ namespace CoreMVC.Controllers
             foreach (Showroomer ShowroomerOne in _repository.GetAll())
             {
                 Showroomer NewShowroomer = new Showroomer();
-                NewShowroomer.City = ShowroomerOne.City;
-                NewShowroomer.Description = ShowroomerOne.Description;
-                NewShowroomer.Latitude = ShowroomerOne.Latitude;
-                NewShowroomer.Longitude = ShowroomerOne.Longitude;
-                NewShowroomer.Street = ShowroomerOne.Street;
-                NewShowroomer.Username = ShowroomerOne.Username;
-                NewShowroomer.ZipCode = ShowroomerOne.ZipCode;
-                NewShowroomer.UserId = ShowroomerOne.UserId;
+                NewShowroomer = ShowroomerOne;
                 NewShowroomer.Vouchers = null;
                 NewShowroomer.Showrooms = null;
                 NewShowroomer.Orders = null;
@@ -85,9 +78,10 @@ namespace CoreMVC.Controllers
                                    select interaction;
             foreach (var interaction in InteractionQuery)
             {
+                long? idNull = null;
                 Interaction UserRate = new Interaction();
-                UserRate.InteractionId = interaction.InteractionId;
-                UserRate.ProductId = interaction.ProductId;
+                UserRate = interaction;
+                UserRate.UserId = (long)idNull ;  
                 UserRate.User = null;
                 UserRate.Product = null;
                 InteractionList.Add(UserRate);
@@ -103,13 +97,11 @@ namespace CoreMVC.Controllers
             List<Voucher> VoucherList = new List<Voucher>();
             foreach (var voucher in Query)
             {
+                long? idNull = null;
                 Voucher v = new Voucher();
-                v.Amount = voucher.Amount;
-                v.Description = voucher.Description;
-                v.Name = voucher.Name;
-                v.Reference = voucher.Reference;
-                v.UserId = voucher.UserId;
-                v.VoucherId = voucher.VoucherId;
+                v = voucher;
+                v.User = null;
+                v.UserId = (long) idNull;
                 VoucherList.Add(v);
             }
             item.Vouchers = VoucherList;
@@ -124,9 +116,11 @@ namespace CoreMVC.Controllers
                                    select showroom;
             foreach (var showroom in ShowroomQuery)
             {
+                long? idNull = null;
                 Showroom UserShowroom  = new Showroom();
-                UserShowroom.ProductId = showroom.ProductId;
-                UserShowroom.ShowroomId = showroom.ShowroomId;
+                UserShowroom = showroom;
+                UserShowroom.ShowroomerId = (long)idNull;
+
                 // Product that this user accept to be showroom
                 var ProductQuery = from product in _productRepository.GetAll()
                                    where product.ProductId == showroom.ProductId
@@ -198,13 +192,7 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            Showroomer.Username = item.Username;
-            Showroomer.Street = item.Street;
-            Showroomer.ZipCode = item.ZipCode;
-            Showroomer.City = item.City;
-            Showroomer.Description = item.Description;
-            Showroomer.Latitude = item.Latitude;
-            Showroomer.Longitude = item.Longitude;
+            Showroomer = item;
             Showroomer.Interactions = null;
             Showroomer.Orders = null;
             Showroomer.Showrooms = null;

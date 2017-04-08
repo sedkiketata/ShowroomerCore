@@ -39,9 +39,7 @@ namespace CoreMVC.Controllers
             foreach (Showroom OneShowroom in _repository.GetAll())
             {
                 Showroom NewShowroom = new Showroom();
-                NewShowroom.ProductId = OneShowroom.ProductId;
-                NewShowroom.ShowroomerId = OneShowroom.ShowroomerId;
-                NewShowroom.ShowroomId = OneShowroom.ShowroomId;
+                NewShowroom = OneShowroom;
                 NewShowroom.Showroomer = null;
                 NewShowroom.Product = null;
                 Showrooms.Add(NewShowroom);
@@ -68,14 +66,7 @@ namespace CoreMVC.Controllers
 
             var SelectedUser = _showroomerRepository.Find(item.ShowroomerId);
             Showroomer showroomer = new Showroomer();
-            showroomer.UserId = SelectedUser.UserId;
-            showroomer.Username = SelectedUser.Username;
-            showroomer.City = SelectedUser.City;
-            showroomer.Street = SelectedUser.Street;
-            showroomer.ZipCode = SelectedUser.ZipCode;
-            showroomer.Latitude = SelectedUser.Latitude;
-            showroomer.Longitude = SelectedUser.Longitude;
-            showroomer.Description = SelectedUser.Description;
+            showroomer = SelectedUser;
             showroomer.Showrooms = null;
             showroomer.Orders = null;
             showroomer.Vouchers = null;
@@ -85,14 +76,7 @@ namespace CoreMVC.Controllers
 
             var SelectedProduct = _productRepository.Find(item.ProductId);
             Product Product = new Product();
-            Product.ProductId = SelectedProduct.ProductId;
-            Product.Name = SelectedProduct.Name;
-            Product.Price = SelectedProduct.Price;
-            Product.Quantity = SelectedProduct.Quantity;
-            Product.TVA = SelectedProduct.TVA;
-            Product.Brand = SelectedProduct.Brand;
-            Product.Category = SelectedProduct.Category;
-            Product.Discount = SelectedProduct.Discount;
+            Product = SelectedProduct;
             Product.Showrooms = null;
             Product.Interactions = null;
             Product.Orders = null;
@@ -149,9 +133,7 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            Showroom.ProductId = item.ProductId;
-            Showroom.ShowroomerId = item.ShowroomerId;
-            Showroom.ShowroomId = item.ShowroomId;
+            Showroom = item;
             Showroom.Product = null;
             Showroom.Showroomer = null;
             _repository.Update(Showroom);
