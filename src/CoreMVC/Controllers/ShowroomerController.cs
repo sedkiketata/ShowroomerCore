@@ -78,10 +78,8 @@ namespace CoreMVC.Controllers
                                    select interaction;
             foreach (var interaction in InteractionQuery)
             {
-                long? idNull = null;
                 Interaction UserRate = new Interaction();
                 UserRate = interaction;
-                UserRate.UserId = (long)idNull ;  
                 UserRate.User = null;
                 UserRate.Product = null;
                 InteractionList.Add(UserRate);
@@ -97,11 +95,9 @@ namespace CoreMVC.Controllers
             List<Voucher> VoucherList = new List<Voucher>();
             foreach (var voucher in Query)
             {
-                long? idNull = null;
                 Voucher v = new Voucher();
                 v = voucher;
                 v.User = null;
-                v.UserId = (long) idNull;
                 VoucherList.Add(v);
             }
             item.Vouchers = VoucherList;
@@ -116,10 +112,8 @@ namespace CoreMVC.Controllers
                                    select showroom;
             foreach (var showroom in ShowroomQuery)
             {
-                long? idNull = null;
                 Showroom UserShowroom  = new Showroom();
                 UserShowroom = showroom;
-                UserShowroom.ShowroomerId = (long)idNull;
 
                 // Product that this user accept to be showroom
                 var ProductQuery = from product in _productRepository.GetAll()

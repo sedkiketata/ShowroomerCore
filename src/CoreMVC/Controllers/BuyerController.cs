@@ -70,10 +70,8 @@ namespace CoreMVC.Controllers
                                    select interaction;
             foreach (var interaction in InteractionQuery)
             {
-                long? idNull = null;
                 Interaction UserRate = new Interaction();
                 UserRate = interaction;
-                UserRate.UserId = (long)idNull;
                 UserRate.Product = null;
                 UserRate.User = null;
                 InteractionList.Add(UserRate);

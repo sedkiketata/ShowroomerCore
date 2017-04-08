@@ -74,10 +74,8 @@ namespace CoreMVC.Controllers
                                    select interaction;
             foreach (var interaction in InteractionQuery)
             {
-                long? idNull = null;
                 Interaction UserRate = new Interaction();
                 UserRate = interaction;
-                UserRate.InteractionId = (long)idNull;
                 var InteractedProduct = _productRepository.Find(interaction.ProductId);
                 UserRate.Product = InteractedProduct;
                 UserRate.User = null;

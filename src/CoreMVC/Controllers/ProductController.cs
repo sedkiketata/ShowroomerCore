@@ -78,15 +78,9 @@ namespace CoreMVC.Controllers
                                 select interaction;
         foreach (var interaction in InteractionQuery)
         {
-            long? idNull = null;
             Interaction UserRate = new Interaction();
             UserRate = interaction;
-            UserRate.ProductId = (long) idNull;
-            var UserInteracted = _userRespository.Find(interaction.UserId);
-                UserInteracted.Vouchers = null;
-                UserInteracted.Orders = null;
-                UserInteracted.Interactions = null;
-            UserRate.User = UserInteracted;
+            UserRate.User = null;
             UserRate.Product = null;
             InteractionList.Add(UserRate);
         }
@@ -100,10 +94,8 @@ namespace CoreMVC.Controllers
                                 select showroom;
         foreach (var showroom in ShowroomQuery)
         {
-            long? idNull = null;
             Showroom showrooms = new Showroom();
             showrooms = showroom;
-            showrooms.ProductId = (long)idNull;
             showrooms.Product = null;
             showrooms.Showroomer = null;
             ShowroomsList.Add(showrooms);
@@ -118,10 +110,8 @@ namespace CoreMVC.Controllers
                             select image;
         foreach (var image in ImageQuery)
         {
-            long? idNull = null;
             Image images = new Image();
             images = image;
-            images.ProductId = (long)idNull;
             images.Product = null;
             ImagesList.Add(images);
         }
