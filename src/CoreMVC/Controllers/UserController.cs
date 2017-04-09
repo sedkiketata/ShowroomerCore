@@ -146,10 +146,10 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            User = item;
-            User.Interactions = null;
-            User.Orders = null;
-            User.Vouchers = null;
+            User.City = item.City;
+            User.Street = item.Street;
+            User.Username = item.Username;
+            User.ZipCode = item.ZipCode;
 
             _repository.Update(User);
             return new NoContentResult();

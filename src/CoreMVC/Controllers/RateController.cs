@@ -127,9 +127,7 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
             
-            Rate = item;
-            Rate.User = null;
-            Rate.Product = null;
+            Rate.Mark = item.Mark;
 
             _repository.Update(Rate);
             return new NoContentResult();

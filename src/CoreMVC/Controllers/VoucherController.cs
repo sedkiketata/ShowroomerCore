@@ -115,8 +115,9 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            v = voucher;
-            v.User = null;
+            v.Amount = voucher.Amount;
+            v.Description = voucher.Description;
+            v.Name = voucher.Name;
        
             _repository.Update(v);
             return new NoContentResult();

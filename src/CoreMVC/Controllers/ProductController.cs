@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using CoreMVC.Infrastructure;
 using CoreMVC.Models;
 using Microsoft.Extensions.Primitives;
+using System.Reflection;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -44,6 +45,7 @@ namespace CoreMVC.Controllers
             {
                 Product NewProduct = new Product();
                 NewProduct = ProductOne;
+                NewProduct.Showrooms = null;
                 NewProduct.Orders = null;
                 NewProduct.Interactions = null;
                 NewProduct.Images = null;
@@ -156,22 +158,26 @@ namespace CoreMVC.Controllers
             if (Request.Headers.TryGetValue("id", out hearderValues))
                 firstValue = hearderValues.FirstOrDefault();
             long id = Convert.ToInt64(firstValue);
-            if (item == null || item.ProductId != id)
+            if (item == null || item.ProductId != id )
             {
                 return BadRequest();
             }
-
             var product = _repository.Find(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            product = item;
-            product.Images = null;
-            product.Interactions = null;
-            product.Orders = null;
-            product.Showrooms = null;
+            // Editing editable properties
+            product.FacebookId = item.FacebookId;
+            product.Brand = item.Brand;
+            product.Category = item.Category;
+            product.Discount = item.Discount;
+            product.Name = item.Name;
+            product.Price = item.Price;
+            product.Quantity = item.Quantity;
+            product.TVA = item.TVA;
+
             _repository.Update(product);
             return new NoContentResult();
         }

@@ -186,11 +186,13 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            Showroomer = item;
-            Showroomer.Interactions = null;
-            Showroomer.Orders = null;
-            Showroomer.Showrooms = null;
-            Showroomer.Vouchers = null;
+            Showroomer.City = item.City;
+            Showroomer.Description = item.Description;
+            Showroomer.Latitude = item.Latitude;
+            Showroomer.Longitude = item.Longitude;
+            Showroomer.Street = item.Street;
+            Showroomer.Username = item.Username;
+            Showroomer.ZipCode = item.ZipCode;
 
             _repository.Update(Showroomer);
             return new NoContentResult();

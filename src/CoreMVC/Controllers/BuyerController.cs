@@ -116,17 +116,16 @@ namespace CoreMVC.Controllers
             {
                 return BadRequest();
             }
-
             var Buyer = _repository.Find(id);
             if (Buyer == null)
             {
                 return NotFound();
             }
-
-            Buyer = item;
-            Buyer.Interactions = null;
-            Buyer.Orders = null;
-            Buyer.Vouchers = null;
+            Buyer.City = item.City;
+            Buyer.DeliveryAddress = item.DeliveryAddress;
+            Buyer.Street = item.Street;
+            Buyer.Username = item.Username;
+            Buyer.ZipCode = item.ZipCode;
 
             _repository.Update(Buyer);
             return new NoContentResult();

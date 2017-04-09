@@ -107,8 +107,8 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            images = item;
-            images.Product = null;
+            images.Name = item.Name;
+            images.Url = item.Url;
 
             _repository.Update(images);
             return new NoContentResult();

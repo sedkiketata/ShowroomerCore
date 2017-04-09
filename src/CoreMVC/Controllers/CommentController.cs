@@ -142,10 +142,8 @@ namespace CoreMVC.Controllers
                 return NotFound();
             }
 
-            Comment = item;
+            Comment.Text = Comment.Text;
             Comment.Date = DateTime.Now;
-            Comment.Product = null;
-            Comment.User = null;
 
             _repository.Update(Comment);
             return new NoContentResult();

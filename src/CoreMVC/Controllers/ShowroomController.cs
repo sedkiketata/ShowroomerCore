@@ -111,37 +111,6 @@ namespace CoreMVC.Controllers
         }
         #endregion
 
-        #region Update Method
-
-        // PUT api/values/5
-        [HttpPut()]
-        public IActionResult Update([FromBody] Showroom item)
-        {
-            StringValues hearderValues;
-            var firstValue = string.Empty;
-            if (Request.Headers.TryGetValue("id", out hearderValues))
-                firstValue = hearderValues.FirstOrDefault();
-            long id = Convert.ToInt64(firstValue);
-            if (item == null || item.ShowroomId != id)
-            {
-                return BadRequest();
-            }
-
-            var Showroom = _repository.Find(id);
-            if (Showroom == null)
-            {
-                return NotFound();
-            }
-
-            Showroom = item;
-            Showroom.Product = null;
-            Showroom.Showroomer = null;
-            _repository.Update(Showroom);
-            return new NoContentResult();
-        }
-
-        #endregion
-
         #region Delete Method
         // DELETE api/values/5
         [HttpDelete]
