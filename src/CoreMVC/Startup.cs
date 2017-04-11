@@ -105,7 +105,13 @@ namespace CoreMVC
                 .AddDbContext<Context>(options => options.UseNpgsql(connection));
 
             // Add framework services.
-            //services.AddMvc();
+            // Here we create a new cors policy that should work on the entire application
+            services.AddCors(option => {
+                option.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("https://corsclient.mybluemix.net"));
+            });
+
+            // Here we configure the MVC Options
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -147,13 +153,9 @@ namespace CoreMVC
             //context.PopulateDatabase();
 
             app.UseStaticFiles();
-
+            app.UseCors("CorsPolicy");
             app.UseMvc(routes =>
             {
-                //routes.MapRoute(
-                //    name: "api",
-                //    template: "api/{controller=Db}/{action=Index}/{id?}"
-                //);
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
