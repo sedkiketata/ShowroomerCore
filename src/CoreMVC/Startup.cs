@@ -108,7 +108,8 @@ namespace CoreMVC
             // Here we create a new cors policy that should work on the entire application
             services.AddCors(option => {
                 option.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("https://corsclient.mybluemix.net"));
+                    ////builder => builder.WithOrigins("https://corsclient.mybluemix.net"));
+                    builder => builder.WithOrigins("*"));
             });
 
             // Here we configure the MVC Options
