@@ -8,9 +8,10 @@ using CoreMVC.Models;
 namespace CoreMVC.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20170429131704_add-description-to-productModel")]
+    partial class adddescriptiontoproductModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:.uuid-ossp", "'uuid-ossp', '', ''")
@@ -89,8 +90,6 @@ namespace CoreMVC.Migrations
                     b.Property<string>("Brand");
 
                     b.Property<string>("Category");
-
-                    b.Property<DateTime>("CreationDate");
 
                     b.Property<string>("Description");
 

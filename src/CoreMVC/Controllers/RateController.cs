@@ -101,7 +101,8 @@ namespace CoreMVC.Controllers
                 return BadRequest();
             }
             _repository.Add(value);
-            return CreatedAtRoute("GetRate", new { id = value.InteractionId }, value);
+            //return CreatedAtRoute("GetRate", new { id = value.InteractionId }, value);
+            return new NoContentResult();
         }
         #endregion
 
