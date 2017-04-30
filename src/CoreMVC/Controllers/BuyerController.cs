@@ -16,12 +16,14 @@ namespace CoreMVC.Controllers
     {
         private readonly IBuyerRepository _repository;
         private readonly IInteractionRepository _interactionRepository;
+        private readonly IUserRepository _userrepository;
 
         #region Contructor
-        public BuyerController(IBuyerRepository repository, IInteractionRepository interactionRepository)
+        public BuyerController(IBuyerRepository repository, IInteractionRepository interactionRepository, IUserRepository userrepository)
         {
             _repository = repository;
             _interactionRepository = interactionRepository;
+            _userrepository = userrepository;
         }
         #endregion
 
@@ -43,10 +45,22 @@ namespace CoreMVC.Controllers
             }
             return ListBuyer;
         }
-        #endregion
 
+        #endregion
+        [Route("[action]")]
+        [HttpGet]
+        public IActionResult GetUser()
+        {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
+            var item = _userrepository.Find(id);
+            return new ObjectResult(item);
+        }
         #region Get Method
-        // GET api/values/5
+            // GET api/values/5
         [HttpGet(Name = "GetBuyer")]
         public IActionResult Get()
         {

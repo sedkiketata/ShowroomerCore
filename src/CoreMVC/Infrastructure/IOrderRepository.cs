@@ -16,5 +16,6 @@ namespace CoreMVC.Infrastructure
         void AddtoCart(long idUser, long idProduct, int Quantity);
         IEnumerable<Order> CartOrders(long idUser);
         void ClearAll(long idUser);
+         void UpdatePurchase(long id);
     }
 }

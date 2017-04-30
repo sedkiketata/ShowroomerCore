@@ -47,7 +47,12 @@ namespace CoreMVC.Infrastructure
             _context.Orders.Update(item);
             _context.SaveChanges();
         }
-
+        public void UpdatePurchase(long id)
+        {
+           Purchase p = _purchaseRespository.Find(id);
+            p.Status = "Order";
+            _purchaseRespository.Update(p);
+        }
 
         #region AddtoCart Method
         public void AddtoCart(long idUser, long idProduct, int Quantity)

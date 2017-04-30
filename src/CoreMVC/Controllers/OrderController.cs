@@ -104,7 +104,51 @@ namespace CoreMVC.Controllers
         }
 
         #endregion
+        #region getByUserId
+        [HttpGet]
+        [Route("[action]")]
+        public IEnumerable<Order> GetOrder()
+        {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
+            List<Order> ListOrder = new List<Order>();
+            IEnumerable<Order> orders = _repository.CartOrders(id);
+            foreach (Order OrderOne in orders)
+            {
+                Order NewOrder = new Order();
+                NewOrder = OrderOne;
+                NewOrder.User = null;
+                NewOrder.Purchase = null;
+                NewOrder.Product = _productRepository.Find(OrderOne.ProductId);
+                ListOrder.Add(NewOrder);
+            }
+            return ListOrder;
+        }
+        #region getproduitById
+        [HttpGet]
+        [Route("[action]")]
+        IEnumerable<Product> getProductById()
+        {
+            IEnumerable<Order> ls = this.GetOrder();
+            List<Product> ListProduct = new List<Product>();
+            foreach (Order  o in ls)
+            {
+                Product pro = new Product();
+              
+               pro = _productRepository.Find(o.ProductId);
+                ListProduct.Add(pro);
 
+            }
+
+            return ListProduct;
+
+        }
+
+        #endregion
+        #endregion
         #region Create Method
         // POST api/values
         [HttpPost]
@@ -137,17 +181,36 @@ namespace CoreMVC.Controllers
                 firstValue = hearderValues.FirstOrDefault();
             long id = Convert.ToInt64(firstValue);
             _repository.Remove(_repository.Find(id).OrderId);
-        } 
+        }
         #endregion
 
         #region ClearAll Method
         // DELETE api/values/5
-        [Route("ClearAll")]
+        [Route("[action]")]
         [HttpDelete]
-        public void Delete([FromBody] long id)
+        public void ClearAll()
         {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
             _repository.ClearAll(id);
-        } 
+        }
         #endregion
-    }
+
+        [HttpPut]
+        [Route("[action]")]
+        public IActionResult checkout()
+        {
+            StringValues hearderValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("id", out hearderValues))
+                firstValue = hearderValues.FirstOrDefault();
+            long id = Convert.ToInt64(firstValue);
+            _repository.UpdatePurchase(id);
+            return new ObjectResult(firstValue);
+
+        }
+        }
 }
