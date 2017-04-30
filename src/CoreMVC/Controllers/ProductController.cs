@@ -46,13 +46,52 @@ namespace CoreMVC.Controllers
                 Product NewProduct = new Product();
                 NewProduct = ProductOne;
                 NewProduct.Showrooms = null;
-                NewProduct.Orders = null;
                 NewProduct.Interactions = null;
+                NewProduct.Orders = null;
                 NewProduct.Images = null;
                 ListProduct.Add(NewProduct);
             }
             return ListProduct;
-        } 
+        }
+        #endregion
+
+        #region GetAllWithRate Method
+        // GET: api/values
+        [Route("[action]")]
+        [HttpGet]
+        public IEnumerable<Product> GetAllWithRate()
+        {
+            List<Product> ListProductWithRate = new List<Product>();
+            foreach (Product ProductOne in _repository.GetAll())
+            {
+                Product NewProduct = new Product();
+                NewProduct = ProductOne;
+
+                #region Rate List
+                List<Interaction> RateList = new List<Interaction>();
+                var RateQuery = from rate in _interactionRepository.GetAll()
+                            where rate.ProductId == NewProduct.ProductId
+                            select rate;
+                foreach (Interaction rated in RateQuery)
+                {
+                    if (rated is Rate)
+                    {
+                        Interaction RateToAdd = new Interaction();
+                        RateToAdd = rated;
+                        RateList.Add(RateToAdd);
+                    }
+                }
+                #endregion
+
+                NewProduct.Interactions = RateList;
+                NewProduct.Showrooms = null;
+                //NewProduct.Interactions = null;
+                NewProduct.Orders = null;
+                NewProduct.Images = null;
+                ListProductWithRate.Add(NewProduct);
+            }
+            return ListProductWithRate;
+        }
         #endregion
 
         #region Get Method
@@ -142,6 +181,7 @@ namespace CoreMVC.Controllers
             {
                 return BadRequest();
             }
+            value.CreationDate = DateTime.Now;
             _repository.Add(value);
             return CreatedAtRoute("GetProduct", new { id = value.ProductId }, value);
         } 
@@ -177,7 +217,7 @@ namespace CoreMVC.Controllers
             product.Price = item.Price;
             product.Quantity = item.Quantity;
             product.TVA = item.TVA;
-
+            product.Description = item.Description;
             _repository.Update(product);
             return new NoContentResult();
         }

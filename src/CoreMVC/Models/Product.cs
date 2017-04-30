@@ -22,6 +22,8 @@ namespace CoreMVC.Models
         public int Quantity { get; set; }
         public float Discount { get; set; }
         public string FacebookId { get; set; }
+        public string Description { get; set; }
+        public DateTime CreationDate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Interaction> Interactions { get; set; }
