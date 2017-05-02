@@ -123,18 +123,18 @@ namespace CoreMVC
             });
 
             // Register Application services
-            services.AddSingleton<IProductRepository, ProductRepository>();
-            services.AddSingleton<IVoucherRepository, VoucherRepository>();
-            services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IOrderRepository, OrderRepository>();
-            services.AddSingleton<IShowroomerRepository, ShowroomerRepository>();
-            services.AddSingleton<IShowroomRepository, ShowroomRepository>();
-            services.AddSingleton<IBuyerRepository, BuyerRepository>();
-            services.AddSingleton<IInteractionRepository, InteractionRepository>();
-            services.AddSingleton<IImageRepository, ImageRepository>();
-            services.AddSingleton<IRateRepository, RateRepository>();
-            services.AddSingleton<ICommentRepository, CommentRepository>();
-            services.AddSingleton<IPurchaseRepository, PurchaseRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IVoucherRepository, VoucherRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IShowroomerRepository, ShowroomerRepository>();
+            services.AddScoped<IShowroomRepository, ShowroomRepository>();
+            services.AddScoped<IBuyerRepository, BuyerRepository>();
+            services.AddScoped<IInteractionRepository, InteractionRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<IRateRepository, RateRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IPurchaseRepository, PurchaseRepository>();
 
         }
 
