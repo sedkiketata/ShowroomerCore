@@ -116,7 +116,8 @@ namespace CoreMVC.Controllers
             }
             value.Date = DateTime.Now;
             _repository.Add(value);
-            return CreatedAtRoute("GetComment", new { id = value.InteractionId }, value);
+            //  return CreatedAtRoute("GetComment", new { id = value.InteractionId }, value);
+            return new NoContentResult();
         }
         #endregion
 

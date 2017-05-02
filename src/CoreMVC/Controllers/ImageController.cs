@@ -81,7 +81,8 @@ namespace CoreMVC.Controllers
                 return BadRequest();
             }
             _repository.Add(value);
-            return CreatedAtRoute("GetImages", new { id = value.ImageId }, value);
+            //   return CreatedAtRoute("GetImages", new { id = value.ImageId }, value);
+            return new NoContentResult();
         }
         #endregion
 

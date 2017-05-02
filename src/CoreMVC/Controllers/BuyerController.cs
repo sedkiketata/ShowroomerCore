@@ -111,7 +111,8 @@ namespace CoreMVC.Controllers
                 return BadRequest();
             }
             _repository.Add(value);
-            return CreatedAtRoute("GetBuyer", new { id = value.UserId }, value);
+            //    return CreatedAtRoute("GetBuyer", new { id = value.UserId }, value);
+            return new NoContentResult();
         }
         #endregion
 

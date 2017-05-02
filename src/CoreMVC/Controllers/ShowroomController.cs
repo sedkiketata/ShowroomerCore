@@ -107,7 +107,7 @@ namespace CoreMVC.Controllers
             value.Product = null;
             value.Showroomer = null;
             _repository.Add(value);
-            return CreatedAtRoute("GetShowroom", new { id = value.ShowroomId }, value);
+            return new NoContentResult();
         }
         #endregion
 
