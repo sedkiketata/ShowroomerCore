@@ -73,7 +73,7 @@ namespace CoreMVC.Controllers
             }
             value.DatePurchase = DateTime.Now;
             _repository.Add(value);
-            return CreatedAtRoute("GetPurchase", new { id = value.PurchaseId }, value);
+            return new NoContentResult();
         }
         #endregion
 

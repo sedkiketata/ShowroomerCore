@@ -244,7 +244,8 @@ namespace CoreMVC.Controllers
             }
             value.CreationDate = DateTime.Now;
             _repository.Add(value);
-            return CreatedAtRoute("GetProduct", new { id = value.ProductId }, value);
+            //  return CreatedAtRoute("GetProduct", new { id = value.ProductId }, value);
+            return new NoContentResult();
         } 
         #endregion
 

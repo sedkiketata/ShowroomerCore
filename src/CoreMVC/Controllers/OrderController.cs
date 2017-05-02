@@ -167,7 +167,7 @@ namespace CoreMVC.Controllers
             _repository.AddtoCart(userId, productId, qte);
             long idNewOrder = _repository.GetAll().Select(x => x.OrderId).Last();
             Order newOrder = _repository.Find(idNewOrder);
-            return CreatedAtRoute("GetOrder", new { id = idNewOrder }, newOrder);
+            return new NoContentResult();
 
         } 
         #endregion

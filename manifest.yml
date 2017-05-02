@@ -3,7 +3,7 @@ declared-services:
     label: elephantsql
     plan: turtle
 applications:
-- name: Showroomer
+- name: ShowroomerCore
   routes:
   - route: showroomercore.mybluemix.net
   memory: 512M

@@ -89,7 +89,8 @@ namespace CoreMVC.Controllers
             }
            
             _repository.Add(voucher);
-            return CreatedAtRoute("GetVoucher", new { id = voucher.VoucherId }, voucher);
+            //   return CreatedAtRoute("GetVoucher", new { id = voucher.VoucherId }, voucher);
+            return new NoContentResult();
         }
         #endregion
 
