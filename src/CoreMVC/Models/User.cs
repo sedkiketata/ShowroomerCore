@@ -16,6 +16,7 @@ namespace CoreMVC.Models
         public String City { get; set; }
         public String Street { get; set; }
         public int ZipCode { get; set; }
+        public string CompanyManaged { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Interaction> Interactions { get; set; }

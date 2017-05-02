@@ -94,6 +94,67 @@ namespace CoreMVC.Controllers
         }
         #endregion
 
+        #region GetAllCategories
+
+        // GET: api/values
+        [Route("[action]")]
+        [HttpGet]
+        public IEnumerable<string> GetAllCategories()
+        {
+            List<string> ListeCategories = new List<string>();
+            foreach (Category categorySelected in Enum.GetValues(typeof(Category)))
+            {
+                ListeCategories.Add(categorySelected.ToString());
+            }
+            return ListeCategories;
+        }
+
+        #endregion
+
+        #region GetAllByCompany
+
+        // GET: api/values
+        [Route("[action]")]
+        [HttpGet]
+        public IEnumerable<Product> GetAllByCompany()
+        {
+            StringValues heardersValues;
+            var firstValue = string.Empty;
+            if (Request.Headers.TryGetValue("company", out heardersValues))
+                firstValue = heardersValues.FirstOrDefault().Trim();
+            string CompanySearchedFor = char.ToUpper(firstValue[0]) + firstValue.Substring(1);
+            List<Product> ProductListByCompany = new List<Product>();
+            foreach (Product ProductOfCompany in _repository.GetAll())
+            {
+                if (ProductOfCompany.Owner == CompanySearchedFor)
+                    ProductListByCompany.Add(ProductOfCompany);
+            }
+            return ProductListByCompany;
+        }
+
+        #endregion
+
+        #region GetAllByCategory
+        [Route("[action]")]
+        [HttpGet]
+        public IEnumerable<Product> GetAllByCategory()
+        {
+            StringValues headerContainsCategory;
+            string firstValueInCategoryHeader = string.Empty;
+            List<Product> ProductListByCategory = new List<Product>();
+            if (Request.Headers.TryGetValue("category", out headerContainsCategory))
+                 firstValueInCategoryHeader = headerContainsCategory.FirstOrDefault().Trim();
+            var searchedCategory = char.ToUpper(firstValueInCategoryHeader[0]) + firstValueInCategoryHeader.Substring(1);
+            foreach (Product ProductByCategory in _repository.GetAll())
+            {
+                if (ProductByCategory.Category == searchedCategory)
+                    ProductListByCategory.Add(ProductByCategory);
+            }
+            return ProductListByCategory;
+        }
+
+        #endregion
+
         #region Get Method
         // GET api/values/5
         [HttpGet(Name = "GetProduct")]
