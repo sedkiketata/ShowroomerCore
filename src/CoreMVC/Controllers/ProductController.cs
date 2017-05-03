@@ -280,6 +280,7 @@ namespace CoreMVC.Controllers
             product.Quantity = item.Quantity;
             product.TVA = item.TVA;
             product.Description = item.Description;
+            product.ImagePath = item.ImagePath;
             _repository.Update(product);
             return new NoContentResult();
         }

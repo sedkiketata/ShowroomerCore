@@ -7,8 +7,8 @@ namespace CoreMVC.Models
 {
     public enum Category
     {
-        Technology,
-        Sport,
+        Technologies,
+        Sports,
         Music,
         Clothes,
         Tools,
