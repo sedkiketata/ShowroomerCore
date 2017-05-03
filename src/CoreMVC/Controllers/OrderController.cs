@@ -104,6 +104,7 @@ namespace CoreMVC.Controllers
         }
 
         #endregion
+
         #region getByUserId
         [HttpGet]
         [Route("[action]")]
@@ -149,6 +150,7 @@ namespace CoreMVC.Controllers
 
         #endregion
         #endregion
+
         #region Create Method
         // POST api/values
         [HttpPost]

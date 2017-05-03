@@ -16,12 +16,15 @@ namespace CoreMVC.Controllers
     {
         private readonly IVoucherRepository _repository;
         private readonly IUserRepository _userRepository;
+        private readonly IShowroomerRepository _showroomerRepository;
 
         #region Construtor
-        public VoucherController(IVoucherRepository repository, IUserRepository userRepository)
+        public VoucherController(IVoucherRepository repository, IUserRepository userRepository,
+            IShowroomerRepository showroomerRepository)
         {
             _repository = repository;
             _userRepository = userRepository;
+            _showroomerRepository = showroomerRepository;
         }
         #endregion
 
@@ -37,7 +40,14 @@ namespace CoreMVC.Controllers
             {
                 Voucher NewVoucher = new Voucher();
                 NewVoucher = VoucherOne;
-                NewVoucher.User = null;
+                Showroomer UpdatedUser = new Showroomer();
+                var OldUser = _showroomerRepository.Find(VoucherOne.UserId);
+                UpdatedUser = OldUser;
+                UpdatedUser.Vouchers = null;
+                UpdatedUser.Showrooms = null;
+                UpdatedUser.Orders = null;
+                UpdatedUser.Interactions = null;
+                NewVoucher.User = UpdatedUser;
                 ListVoucher.Add(NewVoucher);
             }
             return ListVoucher;

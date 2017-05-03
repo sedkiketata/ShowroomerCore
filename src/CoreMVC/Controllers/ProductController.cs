@@ -281,6 +281,10 @@ namespace CoreMVC.Controllers
             product.TVA = item.TVA;
             product.Description = item.Description;
             product.ImagePath = item.ImagePath;
+            product.FacebookId = item.FacebookId;
+            product.CreationDate = item.CreationDate;
+            product.Owner = item.Owner;
+
             _repository.Update(product);
             return new NoContentResult();
         }
