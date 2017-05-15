@@ -150,6 +150,30 @@ namespace CoreMVC.Controllers
         }
         #endregion
 
+        #region GetAllByProduct
+        [Route("[action]")]
+        [HttpGet]
+        public IEnumerable<Showroomer> GetAllByProduct()
+        {
+            StringValues headerContainsProductId;
+            string firstValueInProductHeader = string.Empty;
+            List<Showroomer> ShowroomerByProduct = new List<Showroomer>();
+            if (Request.Headers.TryGetValue("id", out headerContainsProductId))
+                firstValueInProductHeader = headerContainsProductId.FirstOrDefault().Trim();
+            long productId = Convert.ToInt64(firstValueInProductHeader); 
+            foreach (Showroomer Showroomer in _repository.GetAll())
+            {
+                foreach (Showroom sh in Showroomer.Showrooms)
+                {
+                    if (sh.ProductId == productId)
+                        ShowroomerByProduct.Add(Showroomer);
+                }
+            }
+            return ShowroomerByProduct;
+        }
+
+        #endregion
+
         #region Create Method
         // POST api/values
         [HttpPost]

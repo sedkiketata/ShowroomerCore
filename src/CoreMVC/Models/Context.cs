@@ -34,6 +34,7 @@ namespace CoreMVC.Models
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<Showroom> Showrooms { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<ShowroomerReview> ShowroomerRiviews { get; set; }
         #endregion
 
         public Context(DbContextOptions<Context> options) : base(options)
@@ -151,7 +152,12 @@ namespace CoreMVC.Models
             );
             #endregion
 
+            #region ShowroomerReview Configuration
+            builder.Entity<ShowroomerReview>()
+                .ToTable("ShowroomerReview");
+            #endregion
+
         }
-       
+
     }
 }
