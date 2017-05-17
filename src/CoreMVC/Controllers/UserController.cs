@@ -41,6 +41,7 @@ namespace CoreMVC.Controllers
             {
                 User NewUser = new User();
                 NewUser = UserOne;
+                NewUser.password = null;
                 NewUser.Vouchers = null;
                 NewUser.Orders = null;
                 NewUser.Interactions = null;
@@ -151,6 +152,7 @@ namespace CoreMVC.Controllers
             User.Street = item.Street;
             User.Username = item.Username;
             User.ZipCode = item.ZipCode;
+            User.password = item.password;
 
             _repository.Update(User);
             return new NoContentResult();

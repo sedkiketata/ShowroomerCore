@@ -72,6 +72,7 @@ namespace CoreMVC.Controllers
 
             // item.User = SelectedUser;
             User = SelectedUser;
+            User.password = null;
             User.Interactions = null;
             User.Orders = null;
             User.Vouchers = null;

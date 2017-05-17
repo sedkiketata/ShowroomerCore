@@ -19,6 +19,9 @@ namespace CoreMVC.Models
         public string CompanyManaged { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string password { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<Interaction> Interactions { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
