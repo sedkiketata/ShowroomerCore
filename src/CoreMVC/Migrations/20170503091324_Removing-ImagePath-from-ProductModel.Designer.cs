@@ -8,9 +8,10 @@ using CoreMVC.Models;
 namespace CoreMVC.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20170503091324_Removing-ImagePath-from-ProductModel")]
+    partial class RemovingImagePathfromProductModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:.uuid-ossp", "'uuid-ossp', '', ''")
@@ -147,34 +148,6 @@ namespace CoreMVC.Migrations
                     b.ToTable("Showrooms");
                 });
 
-            modelBuilder.Entity("CoreMVC.Models.ShowroomerReview", b =>
-                {
-                    b.Property<int>("ShowroomerReviewId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comment");
-
-                    b.Property<int>("Mark");
-
-                    b.Property<int>("ShowroomerId");
-
-                    b.Property<long?>("ShowroomerUserId");
-
-                    b.Property<int>("UserId");
-
-                    b.Property<long?>("UserId1");
-
-                    b.Property<DateTime>("date");
-
-                    b.HasKey("ShowroomerReviewId");
-
-                    b.HasIndex("ShowroomerUserId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("ShowroomerReview");
-                });
-
             modelBuilder.Entity("CoreMVC.Models.User", b =>
                 {
                     b.Property<long>("UserId")
@@ -192,8 +165,6 @@ namespace CoreMVC.Migrations
                     b.Property<string>("Username");
 
                     b.Property<int>("ZipCode");
-
-                    b.Property<string>("password");
 
                     b.HasKey("UserId");
 
@@ -324,17 +295,6 @@ namespace CoreMVC.Migrations
                         .WithMany("Showrooms")
                         .HasForeignKey("ShowroomerId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CoreMVC.Models.ShowroomerReview", b =>
-                {
-                    b.HasOne("CoreMVC.Models.Showroomer", "Showroomer")
-                        .WithMany()
-                        .HasForeignKey("ShowroomerUserId");
-
-                    b.HasOne("CoreMVC.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("CoreMVC.Models.Voucher", b =>

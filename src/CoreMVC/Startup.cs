@@ -135,6 +135,7 @@ namespace CoreMVC
             services.AddScoped<IRateRepository, RateRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IPurchaseRepository, PurchaseRepository>();
+            services.AddScoped<IShowroomerReviewRepository, ShowroomerReviewRepository>();
 
         }
 
